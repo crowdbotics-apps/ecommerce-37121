@@ -87,6 +87,8 @@ THIRD_PARTY_APPS = [
     'django_extensions',
     'drf_yasg',
     'storages',
+    'allauth.socialaccount.providers.facebook',  # add this line here
+    'allauth.socialaccount.providers.apple',  # add this other line
 ]
 
 OSCAR_APPS = [
