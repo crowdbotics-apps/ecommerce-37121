@@ -1,18 +1,13 @@
-import React, { useState, useContext } from "react"
-import { TouchableOpacity, View } from "react-native"
-import { OptionsContext, GlobalOptionsContext } from "@options"
+import React, { useState } from "react"
+import { View } from "react-native"
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
-import Icon from "react-native-vector-icons/Feather"
+import options from "./options"
 
 navigator.geolocation = require("@react-native-community/geolocation");
 
 const AddressAutoComplete = ({ navigation, route, onAddressSelect }) => {
   const [inputValue, setInputValue] = useState("");
   const [defaultValue, setDefaultValue] = useState("");
-  const gOptions = useContext(GlobalOptionsContext);
-  const firstOptions = useContext(OptionsContext);
-  const options = firstOptions[Object.keys(firstOptions)[0]];
-
   const { apiKey, autoCompleteStyles, settings } = options;
 
   const getAddressHandle = (data, address) => {

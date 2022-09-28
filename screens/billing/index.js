@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Text, Image, StyleSheet, View, ScrollView, LogBox } from 'react-native'
-import Button from '../components/Button'
-import DetailsCard from '../components/DetailCard'
+import Button from '../../components/Button'
+import DetailsCard from '../../components/DetailCard'
 import { modules } from '@modules'
 import { useEffect } from 'react'
 // import { getUserAddress } from '../apis';
@@ -79,7 +79,7 @@ const Billing = ({ navigation, route }) => {
         <View style={styles.btnContainer}>
           <Button
             buttonText={"Proceed"}
-            onPress={() => navigation.navigate("Shipping", { basketData })}
+            onPress={() => navigation.navigate("shipping", { basketData })}
           />
         </View>
       </View>

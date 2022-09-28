@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react"
 import { Text, StyleSheet, View, Image, ScrollView } from 'react-native'
 import { Checkbox, RadioButton } from "react-native-paper"
-import { getUserAddress } from "../apis"
-import Button from "../components/Button"
-import DetailsCard from "../components/DetailCard"
-import Input from "../components/TextInput"
+import { getUserAddress } from "../../apis"
+import Button from "../../components/Button"
+import DetailsCard from "../../components/DetailCard"
+import Input from "../../components/TextInput"
 
 const ShippingAddress = ({ navigation, route }) => {
   const [address, setAddress] = useState({});
@@ -36,7 +36,7 @@ const ShippingAddress = ({ navigation, route }) => {
             <View style={styles.unSelected} />
           </View>
           <Image
-            source={require("../assets/3Dots.png")}
+            source={require("../../assets/3Dots.png")}
             style={styles.threeDots}
           />
         </View>
@@ -72,11 +72,11 @@ const ShippingAddress = ({ navigation, route }) => {
         />
         <View style={styles.mapHeader}>
           <Text style={styles.mapHeaderText}>Map</Text>
-          <Image source={require("../assets/locationIcon.png")} />
+          <Image source={require("../../assets/locationIcon.png")} />
         </View>
         <View style={styles.mapImageContainer}>
           <Image
-            source={require('../assets/map.png')}
+            source={require('../../assets/map.png')}
             style={styles.mapImage}
           />
         </View>
@@ -139,11 +139,11 @@ const ShippingAddress = ({ navigation, route }) => {
           <Button
             buttonText={'Continue'}
             onPress={() => {
-              navigation.navigate('OrderComplete');
+              navigation.navigate('orderComplete');
             }}
           >
             <Image
-              source={require('../assets/arrow.png')}
+              source={require('../../assets/arrow.png')}
               style={styles.arrow}
             />
           </Button>

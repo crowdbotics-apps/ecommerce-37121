@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { Text, StyleSheet, View, FlatList } from "react-native"
-import { getProduct, getProductsList, productAvailability } from "../apis"
-import Product from "../components/Product"
-import TabView from "../components/TabView"
+import { getProduct, getProductsList, productAvailability } from "../../apis"
+import Product from "../../components/Product"
+import TabView from "../../components/TabView"
 
 const ProductListingScreen = ({ navigation }) => {
   const [productsList, setProductsList] = useState([])

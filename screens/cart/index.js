@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 import { useEffect } from "react"
 import { Text, Image, StyleSheet, View, ScrollView } from "react-native"
-import { getBasket, removeFromBasket } from "../apis"
-import Button from "../components/Button"
-import DetailsCard from "../components/DetailCard"
-import OrderCard from "../components/OrderCard"
+import { getBasket, removeFromBask } from "../../apis"
+import Button from "../../components/Button"
+import DetailsCard from "../../components/DetailCard"
+import OrderCard from "../../components/OrderCard"
 
 const ShoppingCart = ({ navigation }) => {
   const [cartProducts, setCartProducts] = useState([])
@@ -51,7 +51,7 @@ const ShoppingCart = ({ navigation }) => {
           <Image
             resizeMode="contain"
             style={styles.cartImage}
-            source={require('../assets/cart.png')}
+            source={require('../../assets/cart.png')}
           />
         </View>
         {cartProducts &&
@@ -67,7 +67,7 @@ const ShoppingCart = ({ navigation }) => {
           <Button
             buttonText="Checkout"
             onPress={() => {
-              navigation.navigate('Billing', { basketData });
+              navigation.navigate('billing', { basketData });
             }}
           />
         </View>

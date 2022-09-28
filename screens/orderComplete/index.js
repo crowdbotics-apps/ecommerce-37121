@@ -13,7 +13,7 @@ const OrderComplete = params => {
         <Text style={styles.subHeading}>Your order has been completed.</Text>
       </View>
       <Image
-        source={require("../assets/orderCompleted.png")}
+        source={require("../../assets/orderCompleted.png")}
         style={styles.image}
       />
       <View style={styles.inputContainer}>
@@ -27,7 +27,7 @@ const OrderComplete = params => {
           autoCorrect={false}
         />
         <Image
-          source={require("../assets/dropdownIcon.png")}
+          source={require("../../assets/dropdownIcon.png")}
           style={styles.searchIcon}
         />
       </View>

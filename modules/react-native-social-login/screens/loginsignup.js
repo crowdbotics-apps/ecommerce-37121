@@ -32,7 +32,7 @@ import {
   appleLogin
 } from "../auth"
 import { unwrapResult } from "@reduxjs/toolkit"
-import { setItem } from "../../../src/utils"
+import { setItem } from "../../../utils"
 
 // Custom Text Input
 export const TextInputField = props => (

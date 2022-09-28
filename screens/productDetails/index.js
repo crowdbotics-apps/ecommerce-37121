@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { Text, View, StyleSheet, Image, Pressable } from "react-native"
 import { Slider } from "react-native-elements"
-import { addToBasket, getPrice } from "../apis"
-import Button from "../components/Button"
+import { addToBasket, getPrice } from "../../apis"
+import Button from "../../components/Button"
 
 const ProductDetails = ({ navigation, route }) => {
   const availability = {
@@ -47,7 +47,7 @@ const ProductDetails = ({ navigation, route }) => {
         url: product.id,
         partner_id: 4,
       })
-      navigation.navigate("ShoppingCart")
+      navigation.navigate("cart")
     } catch (error) {
       console.log("ERROR: ", error)
     }
@@ -85,7 +85,7 @@ const ProductDetails = ({ navigation, route }) => {
               onPress={() => decrement()}
             >
               <Image
-                source={require("../assets/minusIcon.png")}
+                source={require("../../assets/minusIcon.png")}
                 style={styles.icon}
               />
             </Pressable>
@@ -95,7 +95,7 @@ const ProductDetails = ({ navigation, route }) => {
               onPress={() => increment()}
             >
               <Image
-                source={require("../assets/plusIcon.png")}
+                source={require("../../assets/plusIcon.png")}
                 style={styles.icon}
               />
             </Pressable>
@@ -104,7 +104,7 @@ const ProductDetails = ({ navigation, route }) => {
 
         <Text style={styles.description}>{product.caption}</Text>
         <Button
-          buttonText="Confirm"
+          buttonText="Add to cart"
           style={styles.button}
           onPress={() => handleConfirmation(product)}
         />
