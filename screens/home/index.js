@@ -1,9 +1,9 @@
 import React from "react";
-// import App from '../../src'
+import App from '../../src'
 import { Text } from "react-native"
 
 const Home = () => {
-  return <Text>Home</Text>;
+  return <App />;
 };
 
 export default Home;

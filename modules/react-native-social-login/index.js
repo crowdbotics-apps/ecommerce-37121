@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   ImageBackground,
@@ -21,6 +21,7 @@ import { slice } from "./auth";
 import { styles } from "./screens/styles";
 import { SignInTab, SignupTab } from "./screens/loginsignup";
 import PasswordReset from "./screens/reset";
+import { getItem } from "../../src/utils";
 
 const LoginTabBar = ({ navigation, state, descriptors }) => {
   const currentTab = state.routes[state.index];
@@ -134,7 +135,15 @@ const LoginScreen = () => {
 
 const Stack = createStackNavigator();
 
-const LoginSignup = () => {
+const LoginSignup = ({navigation}) => {
+
+  useEffect(() => {
+    getItem("token").then(() => {
+      navigation.navigate('home')
+    })
+
+  }, [])
+
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
