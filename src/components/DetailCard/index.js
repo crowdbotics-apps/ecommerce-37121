@@ -4,20 +4,20 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-const DetailsCard = ({orderAmount, deliveryCharges, totalAmount}) => {
+const DetailsCard = ({basketData}) => {
     return (
       <View style={detailsCardStyles.detailsCard}>
         <View style={detailsCardStyles.pricing}>
           <Text style={detailsCardStyles.pricingText}>Order</Text>
-          <Text style={detailsCardStyles.pricingText}>{orderAmount}$</Text>
+          <Text style={detailsCardStyles.pricingText}>{basketData?.total_excl_tax}$</Text>
         </View>
         <View style={detailsCardStyles.pricing}>
           <Text style={detailsCardStyles.pricingText}>Delivery</Text>
-          <Text style={detailsCardStyles.pricingText}>{deliveryCharges}$</Text>
+          <Text style={detailsCardStyles.pricingText}>{basketData?.delivery_fee}$</Text>
         </View>
         <View style={detailsCardStyles.pricing}>
           <Text style={detailsCardStyles.summaryText}>Summary</Text>
-          <Text style={detailsCardStyles.summaryText}>{totalAmount}$</Text>
+          <Text style={detailsCardStyles.summaryText}>{basketData?.total}$</Text>
         </View>
       </View>
     );

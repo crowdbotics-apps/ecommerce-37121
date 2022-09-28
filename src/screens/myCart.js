@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { Text, Image, StyleSheet, View, ScrollView } from "react-native";
 import { getBasket } from "../apis";
@@ -6,19 +6,21 @@ import Button from "../components/Button";
 import DetailsCard from "../components/DetailCard";
 import OrderCard from "../components/OrderCard";
 
-const ShoppingCart = ({navigation, route}) => {
-    console.log("route: ", route?.params);
+const ShoppingCart = ({ navigation }) => {
 
-    useEffect(async() => {
-   const basket = await getBasket();
-   console.log("basket", basket)
-    }, [])
-    
+  const [cartProducts, setCartProducts] = useState([])
+const [basketData, setBasketData] = useState({})
+  useEffect(async () => {
+    const basket = await getBasket();
+    setCartProducts(basket[0].line_details)
+    setBasketData(basket[0]);
+  }, [])
+
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor: "#FFF"}}>
-      <DetailsCard orderAmount={20} deliveryCharges={1.5} totalAmount={21.5}></DetailsCard>
+    <ScrollView showsVerticalScrollIndicator={false} style={{ backgroundColor: "#FFF" }}>
+      <DetailsCard basketData = {basketData}></DetailsCard>
       <View style={styles.container}>
-        
+
         <View style={styles.tabView}>
           <View style={styles.selectedTab}>
             <Text>Select all</Text>
@@ -31,11 +33,14 @@ const ShoppingCart = ({navigation, route}) => {
           <Text style={styles.chartText}>Chart</Text>
           <Image resizeMode="contain" style={styles.cartImage} source={require("../assets/cart.png")} />
         </View>
-        <OrderCard />
-        <OrderCard />
-        <OrderCard />
+        {
+          cartProducts && cartProducts.map((product, index) =>
+          <OrderCard item={product} key={index}/>
+          )
+        }
+        
         <View style={styles.btnContainer}>
-          <Button buttonText="Checkout" onPress={() =>{navigation.navigate("Billing", {})}} />
+          <Button buttonText="Checkout" onPress={() => { navigation.navigate("Billing", {basketData}) }} />
         </View>
       </View>
     </ScrollView>

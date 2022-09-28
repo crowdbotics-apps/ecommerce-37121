@@ -1,19 +1,21 @@
 import React from "react";
 import { Text, Image, StyleSheet, View } from "react-native";
 
-const OrderCard = () => {
+const OrderCard = ({item}) => {
+  const {product} = item;
+
     return (
       <View style={orderStyles.container}>
         <View style={orderStyles.order}>
           <View style={orderStyles.image}>
-            <Image source={require("../../assets/edit.png")} />
+            <Image source={{uri: product.images[0].original}} style={orderStyles.productImage}/>
           </View>
           <View style={orderStyles.description}>
             <Text>Order name</Text>
             <View style={orderStyles.bottomComponent}>
               <View style={orderStyles.quantity}>
                 <Text>-</Text>
-                <Text style={{ fontWeight: "bold" }}>3</Text>
+                <Text style={{ fontWeight: "bold" }}>{item?.quantity}</Text>
                 <Text>+</Text>
               </View>
               <Image source={require("../../assets/delete.png")} style={orderStyles.img} />
@@ -21,7 +23,7 @@ const OrderCard = () => {
           </View>
         </View>
         <View>
-          <Text style={orderStyles.orderPrice}>$10.25</Text>
+          <Text style={orderStyles.orderPrice}>${product?.price?.excl_tax}</Text>
         </View>
       </View>
     );
@@ -53,6 +55,12 @@ const OrderCard = () => {
       justifyContent: "center",
       alignItems: "center",
       marginRight: 10
+    },
+    productImage:{
+      height: 60,
+      width: 60,
+      resizeMode: "contain",
+      borderRadius: 30,
     },
     description: {
       flexDirection: "column",

@@ -60,7 +60,24 @@ export const getProductsList = async () => {
     return data;
   };
 
-  export const getBasket = async (url) => {
+
+  export const addToBasket = async (obj) => {
+    const response = await fetch(
+      `${BASE_URL}/api/basket/add-product/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        Authorization: "Token bc1b3be1257f4a2739031f35730d1ea622b84a61",
+        body: JSON.stringify(obj)    
+      }
+    );
+    const data = await response.json();
+    return data;
+  };
+  
+  export const getBasket = async () => {
     const response = await fetch(
       `${BASE_URL}/api/baskets/`,
       {
@@ -68,11 +85,24 @@ export const getProductsList = async () => {
         headers: {
           "Content-Type": "application/json",
         },
-        
+        Authorization: "Token bc1b3be1257f4a2739031f35730d1ea622b84a61"      
       }
     );
     const data = await response.json();
     return data;
   };
-  
-  
+
+  export const getBasketLines = async (basket_id) => {
+    const response = await fetch(
+      `${BASE_URL}/api/baskets/${basket_id}/lines/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        Authorization: "Token bc1b3be1257f4a2739031f35730d1ea622b84a61"      
+      }
+    );
+    const data = await response.json();
+    return data;
+  };

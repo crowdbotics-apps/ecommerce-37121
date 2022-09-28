@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Text, Image, StyleSheet, View, ScrollView, LogBox } from "react-native";
 import Button from "../components/Button";
 import DetailsCard from "../components/DetailCard";
-// import Input from "../components/TextInput";
 import { modules } from "@modules";
 import { useEffect } from "react";
-const Billing = ({ navigation }) => {
+const Billing = ({ navigation, route }) => {
   const [address, setAddress] = useState(null);
   const AddressAutoComplete = modules[0].value.navigator;  //module_index : position of the module in modules folder
+  const [cartProducts, setCartProducts] = useState([])
+  const [basketData, setBasketData] = useState({})
 
 
   const onSelectAddress = (address) => {
@@ -15,13 +16,18 @@ const Billing = ({ navigation }) => {
   }
 
   useEffect(() => {
-    LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
+    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
+    if(route?.params?.basketData){
+      const {line_details} = route?.params?.basketData;
+      setCartProducts(line_details)
+      setBasketData(route?.params?.basketData);
+    }
   }, [])
 
   
   return (
     <View style={{ backgroundColor: "#FFF", width: "100%", height: '100%' }}>
-      <DetailsCard orderAmount={20} deliveryCharges={1.5} totalAmount={21.5} />
+      <DetailsCard basketData={basketData} />
       <View style={styles.container}>
 
         <View style={styles.deliveryDetailsContainer}>
@@ -36,10 +42,13 @@ const Billing = ({ navigation }) => {
         </View>
         <View style={styles.cardContainer}>
         <ScrollView showsVerticalScrollIndicator={false}>
-            <OrderCard />
-            <OrderCard />
-            <OrderCard />
-            <OrderCard />
+          {
+            cartProducts && cartProducts.map((product, index) =>
+            <OrderCard item={product} key={index}/>
+            )
+          }
+            
+            
         </ScrollView>
         </View>
         <View style={styles.btnContainer}>
@@ -125,21 +134,23 @@ const styles = StyleSheet.create({
 
 export default Billing;
 
-const OrderCard = () => {
+const OrderCard = ({item}) => {
+  const {product} = item;
+  console.log("images", product?.images[0].original)
   return (
     <View style={orderStyles.container}>
       <View style={orderStyles.order}>
         <View style={orderStyles.image}>
-          <Image source={require("../assets/edit.png")} />
+          <Image source={{uri: product?.images[0]?.original}} style={orderStyles.productImage}/>
         </View>
         <View style={orderStyles.description}>
-          <Text style={orderStyles.orderName}>Order name</Text>
-          <Text style={orderStyles.quantity}>Quantity: 1</Text>
+          <Text style={orderStyles.orderName}>{product?.title}</Text>
+          <Text style={orderStyles.quantity}>Quantity: {item?.quantity}</Text>
           <Text style={orderStyles.inStock}>In stock</Text>
         </View>
       </View>
       <View>
-        <Text style={orderStyles.orderPrice}>$10.25</Text>
+        <Text style={orderStyles.orderPrice}>{product?.price?.excl_tax}</Text>
       </View>
     </View>
   );
@@ -173,6 +184,12 @@ const orderStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 10
+  },
+  productImage: {
+    height: 60,
+    width: 60,
+    borderRadius: 30,
+    resizeMode: "contain"
   },
   description: {
     flexDirection: "column",

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Image, Pressable } from "react-native";
 import { Slider } from "react-native-elements";
-import { getPrice } from "../apis";
+import { addToBasket, getPrice } from "../apis";
 import Button from "../components/Button";
 
-const ProductDetails = ({navigation, route}) => {
+const ProductDetails = ({ navigation, route }) => {
   const availability = {
     color: true ? "#12D790" : "#EA4335",
     fontSize: 14,
@@ -15,12 +15,12 @@ const ProductDetails = ({navigation, route}) => {
   const [quantity, setQuantity] = useState(1);
   const [description, setDescription] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec blandit elementum sapien ac feugiat. Donec tempor dapibus turpis, ac fermentum nulla tempus eu.")
 
-  const handlePrice = async (priceUrl) =>{
+  const handlePrice = async (priceUrl) => {
     const price = await getPrice(priceUrl);
     setProductPrice(price)
   }
   useEffect(() => {
-    if(route?.params?.product){
+    if (route?.params?.product) {
       setProduct(route?.params?.product)
       handlePrice(route?.params?.product?.price);
     }
@@ -38,11 +38,24 @@ const ProductDetails = ({navigation, route}) => {
     }
   };
 
+  const handleConfirmation = async (product) => {
+    try {
+      const res = await addToBasket({ quantity, url: product.id, partner_id: 4 })
+      console.log("ADDBasket: ", res);
+      navigation.navigate("ShoppingCart")
+
+    } catch (error) {
+      console.log("ERROR: ", error)
+    }
+
+  }
+
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
-          source={{uri: product?.images? product?.images[0].original : "jt"}}
+          source={{ uri: product?.images ? product?.images[0].original : "jt" }}
           style={styles.logo}
         />
       </View>
@@ -51,10 +64,10 @@ const ProductDetails = ({navigation, route}) => {
         <Text style={styles.title}>{product?.title}</Text>
         <Text style={styles.description}>{description}</Text>
         <View style={styles.availabilityContainer}>
-        <Text style={styles.statusText}>Availability Status: </Text>
-        <Text style={availability}>
-         {product?.availability_status?.is_available_to_buy ? "Available" : "Not available"}
-            </Text>
+          <Text style={styles.statusText}>Availability Status: </Text>
+          <Text style={availability}>
+            {product?.availability_status?.is_available_to_buy ? "Available" : "Not available"}
+          </Text>
         </View>
         <View style={styles.counterContainer}>
           <View style={styles.priceContainer}>
@@ -65,7 +78,7 @@ const ProductDetails = ({navigation, route}) => {
               ${productPrice.incl_tax}
             </Text>
           </View>
-          
+
           <View style={styles.counter}>
             <Pressable
               style={[styles.counterBtn, styles.decrement]}
@@ -86,10 +99,10 @@ const ProductDetails = ({navigation, route}) => {
             </Pressable>
           </View>
         </View>
-        
-       
+
+
         <Text style={styles.description}>{product.caption}</Text>
-        <Button buttonText="Confirm" style={styles.button} onPress={()=>{navigation.navigate("ShoppingCart", {product})}}/>
+        <Button buttonText="Confirm" style={styles.button} onPress={() => handleConfirmation(product)} />
       </View>
     </View>
   );
@@ -212,12 +225,13 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     marginBottom: 20
   },
-  availabilityContainer:{ flexDirection: "row",
-  justifyContent: "flex-start",
-  alignItems: "center",
-marginVertical: 15
-},
-  statusText:{fontSize: 12, fontWeight: "bold", color: "#626468"}
+  availabilityContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginVertical: 15
+  },
+  statusText: { fontSize: 12, fontWeight: "bold", color: "#626468" }
 });
 
 export default ProductDetails;
