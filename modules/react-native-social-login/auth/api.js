@@ -1,5 +1,5 @@
-import axios from "axios";
-import { getGlobalOptions } from "@options";
+import axios from "axios"
+import { getGlobalOptions } from "@options"
 
 const global = getGlobalOptions();
 const BASE_URL = global.url; // your app back-end url

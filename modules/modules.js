@@ -1,7 +1,10 @@
 import { YourAppModule } from "./yourapp"
 
 const sortNavigators = (a, b) => {
-  if (a.value.hasOwnProperty("navigator") && b.value.hasOwnProperty("navigator")) {
+  if (
+    a.value.hasOwnProperty('navigator') &&
+    b.value.hasOwnProperty('navigator')
+  ) {
     return 0;
   } else if (a.value.hasOwnProperty("navigator")) {
     return -1;
@@ -19,7 +22,7 @@ const sortMenu = (a, _) => {
 }
 
 const addTitle = item => {
-  const humanizeName = (name) => {
+  const humanizeName = name => {
     let title = name.replace(/([A-Z])/g, " $1");
     title = title.charAt(0).toUpperCase() + title.slice(1);
     return title
@@ -40,7 +43,7 @@ const addPlaceholderModule = modules => {
   }
 }
 
-export const getModules = (manifest) => {
+export const getModules = manifest => {
   modules = manifest.map(addTitle).sort(sortNavigators).sort(sortMenu);
 
   addPlaceholderModule(modules)

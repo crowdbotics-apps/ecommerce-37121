@@ -1,9 +1,10 @@
 // Please, update the values below as instructed in the README.md file.
-export const GOOGLE_WEB_CLIENT_ID = "980184327649-kdmcg0a1bbh8o9v6sqm60n5lpjvhlfan.apps.googleusercontent.com";
-export const GOOGLE_IOS_CLIENT_ID = "YYYYYY.apps.googleusercontent.com";
-export const APPLE_SERVICE_ID = "com.crowdbotics.ecommerce_37121";
+export const GOOGLE_WEB_CLIENT_ID =
+  '980184327649-kdmcg0a1bbh8o9v6sqm60n5lpjvhlfan.apps.googleusercontent.com'
+export const GOOGLE_IOS_CLIENT_ID = "YYYYYY.apps.googleusercontent.com"
+export const APPLE_SERVICE_ID = "com.crowdbotics.ecommerce_37121"
 export const APPLE_REDIRECT_CALLBACK =
-  "https://ecommerce-37121.botics.co/accounts/apple/login/callback/";
+  "https://ecommerce-37121.botics.co/accounts/apple/login/callback/"
 
 // -----------------------------------------------------
 const messageMap = {

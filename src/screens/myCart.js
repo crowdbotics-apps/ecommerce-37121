@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
-import { Text, Image, StyleSheet, View, ScrollView } from "react-native";
-import { getBasket, removeFromBasket } from "../apis";
-import Button from "../components/Button";
-import DetailsCard from "../components/DetailCard";
-import OrderCard from "../components/OrderCard";
+import React, { useState } from "react"
+import { useEffect } from "react"
+import { Text, Image, StyleSheet, View, ScrollView } from "react-native"
+import { getBasket, removeFromBasket } from "../apis"
+import Button from "../components/Button"
+import DetailsCard from "../components/DetailCard"
+import OrderCard from "../components/OrderCard"
 
 const ShoppingCart = ({ navigation }) => {
-
   const [cartProducts, setCartProducts] = useState([])
   const [basketData, setBasketData] = useState({});
 
@@ -20,21 +19,25 @@ const ShoppingCart = ({ navigation }) => {
     handleGetBasket();
   }, [])
 
-  const handleRemoveProduct = async (url) => {
+  const handleRemoveProduct = async url => {
     try {
-      await removeFromBasket(url).then((res) => {
-        handleGetBasket();
-      }).catch((err) => console.log("ERROR: ", err))
+      await removeFromBasket(url)
+        .then(res => {
+          handleGetBasket();
+        })
+        .catch(err => console.log("ERROR: ", err))
     } catch (error) {
       console.log("ERROR: ", error)
     }
   }
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={{ backgroundColor: "#FFF" }}>
-      <DetailsCard basketData={basketData}></DetailsCard>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={{ backgroundColor: '#FFF' }}
+    >
+      <DetailsCard basketData={basketData} />
       <View style={styles.container}>
-
         <View style={styles.tabView}>
           <View style={styles.selectedTab}>
             <Text>Select all</Text>
@@ -45,16 +48,28 @@ const ShoppingCart = ({ navigation }) => {
         </View>
         <View style={styles.cardContent}>
           <Text style={styles.chartText}>Chart</Text>
-          <Image resizeMode="contain" style={styles.cartImage} source={require("../assets/cart.png")} />
+          <Image
+            resizeMode="contain"
+            style={styles.cartImage}
+            source={require('../assets/cart.png')}
+          />
         </View>
-        {
-          cartProducts && cartProducts.map((product, index) =>
-            <OrderCard item={product} handleRemoveProduct={handleRemoveProduct} key={index} />
-          )
-        }
+        {cartProducts &&
+          cartProducts.map((product, index) => (
+            <OrderCard
+              item={product}
+              handleRemoveProduct={handleRemoveProduct}
+              key={index}
+            />
+          ))}
 
         <View style={styles.btnContainer}>
-          <Button buttonText="Checkout" onPress={() => { navigation.navigate("Billing", { basketData }) }} />
+          <Button
+            buttonText="Checkout"
+            onPress={() => {
+              navigation.navigate('Billing', { basketData });
+            }}
+          />
         </View>
       </View>
     </ScrollView>
@@ -136,4 +151,3 @@ const styles = StyleSheet.create({
 });
 
 export default ShoppingCart;
-

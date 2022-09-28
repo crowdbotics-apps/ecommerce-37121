@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from "react"
 import {
   View,
   ImageBackground,
@@ -6,28 +6,28 @@ import {
   Text,
   TouchableOpacity,
   ScrollView
-} from "react-native";
+} from "react-native"
 import {
   NavigationHelpersContext,
   useNavigationBuilder,
   TabRouter,
   TabActions,
   createNavigatorFactory
-} from "@react-navigation/native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { createStackNavigator } from "@react-navigation/stack";
-import { BACKGROUND_URL, LOGO_URL } from "./screens/constants.js";
-import { slice } from "./auth";
-import { styles } from "./screens/styles";
-import { SignInTab, SignupTab } from "./screens/loginsignup";
-import PasswordReset from "./screens/reset";
-import { getItem } from "../../src/utils";
+} from "@react-navigation/native"
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
+import { createStackNavigator } from "@react-navigation/stack"
+import { BACKGROUND_URL, LOGO_URL } from "./screens/constants.js"
+import { slice } from "./auth"
+import { styles } from "./screens/styles"
+import { SignInTab, SignupTab } from "./screens/loginsignup"
+import PasswordReset from "./screens/reset"
+import { getItem } from "../../src/utils"
 
 const LoginTabBar = ({ navigation, state, descriptors }) => {
   const currentTab = state.routes[state.index];
   return (
     <View style={styles.tabStyle}>
-      {state.routes.map((route) => (
+      {state.routes.map(route => (
         <View
           key={route.key}
           style={route.key === currentTab.key ? styles.activeTabStyle : null}
@@ -135,13 +135,11 @@ const LoginScreen = () => {
 
 const Stack = createStackNavigator();
 
-const LoginSignup = ({navigation}) => {
-
+const LoginSignup = ({ navigation }) => {
   useEffect(() => {
     getItem("token").then(() => {
       navigation.navigate('home')
     })
-
   }, [])
 
   return (

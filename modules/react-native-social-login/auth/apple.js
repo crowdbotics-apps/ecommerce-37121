@@ -1,13 +1,13 @@
 /* eslint-disable no-undef */
 // FIXME - fix undefined variables
 
-import "react-native-get-random-values";
-import { v4 as uuid } from "uuid";
+import "react-native-get-random-values"
+import { v4 as uuid } from "uuid"
 import {
   appleAuthAndroid,
   appleAuth
-} from "@invertase/react-native-apple-authentication";
-import { APPLE_SERVICE_ID, APPLE_REDIRECT_CALLBACK } from "./utils";
+} from "@invertase/react-native-apple-authentication"
+import { APPLE_SERVICE_ID, APPLE_REDIRECT_CALLBACK } from "./utils"
 
 export async function appleForAndroid() {
   // Generate secure, random values for state and nonce

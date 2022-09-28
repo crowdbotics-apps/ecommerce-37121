@@ -23,7 +23,7 @@ const getNavigation = (modules, screens, initialRoute) => {
       const pakage = mod.package;
       const name = mod.value.title;
       const Navigator = mod.value.navigator;
-      const Component = (props) => {
+      const Component = props => {
         return (
           <OptionsContext.Provider value={getOptions(pakage)}>
             <Navigator {...props} />
@@ -49,7 +49,7 @@ const getNavigation = (modules, screens, initialRoute) => {
   return Navigation
 }
 
-const getStore = (globalState) => {
+const getStore = globalState => {
   const appReducer = createReducer(globalState, _ => {
     return globalState
   })

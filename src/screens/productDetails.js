@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Image, Pressable } from "react-native";
-import { Slider } from "react-native-elements";
-import { addToBasket, getPrice } from "../apis";
-import Button from "../components/Button";
+import React, { useState, useEffect } from "react"
+import { Text, View, StyleSheet, Image, Pressable } from "react-native"
+import { Slider } from "react-native-elements"
+import { addToBasket, getPrice } from "../apis"
+import Button from "../components/Button"
 
 const ProductDetails = ({ navigation, route }) => {
   const availability = {
@@ -13,9 +13,11 @@ const ProductDetails = ({ navigation, route }) => {
   const [product, setProduct] = useState({});
   const [productPrice, setProductPrice] = useState(1);
   const [quantity, setQuantity] = useState(1);
-  const [description, setDescription] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec blandit elementum sapien ac feugiat. Donec tempor dapibus turpis, ac fermentum nulla tempus eu.")
+  const [description, setDescription] = useState(
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec blandit elementum sapien ac feugiat. Donec tempor dapibus turpis, ac fermentum nulla tempus eu.'
+  )
 
-  const handlePrice = async (priceUrl) => {
+  const handlePrice = async priceUrl => {
     const price = await getPrice(priceUrl);
     setProductPrice(price)
   }
@@ -38,17 +40,18 @@ const ProductDetails = ({ navigation, route }) => {
     }
   };
 
-  const handleConfirmation = async (product) => {
+  const handleConfirmation = async product => {
     try {
-      const res = await addToBasket({ quantity, url: product.id, partner_id: 4 })
+      const res = await addToBasket({
+        quantity,
+        url: product.id,
+        partner_id: 4,
+      })
       navigation.navigate("ShoppingCart")
-
     } catch (error) {
       console.log("ERROR: ", error)
     }
-
-  }
-
+  };
 
   return (
     <View style={styles.container}>
@@ -65,23 +68,22 @@ const ProductDetails = ({ navigation, route }) => {
         <View style={styles.availabilityContainer}>
           <Text style={styles.statusText}>Availability Status: </Text>
           <Text style={availability}>
-            {product?.availability_status?.is_available_to_buy ? "Available" : "Not available"}
+            {product?.availability_status?.is_available_to_buy
+              ? 'Available'
+              : "Not available"}
           </Text>
         </View>
         <View style={styles.counterContainer}>
           <View style={styles.priceContainer}>
-            <Text style={styles.priceText}>
-              ${productPrice.excl_tax}
-            </Text>
-            <Text style={styles.acctualPrice}>
-              ${productPrice.incl_tax}
-            </Text>
+            <Text style={styles.priceText}>${productPrice.excl_tax}</Text>
+            <Text style={styles.acctualPrice}>${productPrice.incl_tax}</Text>
           </View>
 
           <View style={styles.counter}>
             <Pressable
               style={[styles.counterBtn, styles.decrement]}
-              onPress={() => decrement()}>
+              onPress={() => decrement()}
+            >
               <Image
                 source={require("../assets/minusIcon.png")}
                 style={styles.icon}
@@ -90,7 +92,8 @@ const ProductDetails = ({ navigation, route }) => {
             <Text style={styles.counterText}>{quantity}</Text>
             <Pressable
               style={[styles.counterBtn, styles.increment]}
-              onPress={() => increment()}>
+              onPress={() => increment()}
+            >
               <Image
                 source={require("../assets/plusIcon.png")}
                 style={styles.icon}
@@ -99,9 +102,12 @@ const ProductDetails = ({ navigation, route }) => {
           </View>
         </View>
 
-
         <Text style={styles.description}>{product.caption}</Text>
-        <Button buttonText="Confirm" style={styles.button} onPress={() => handleConfirmation(product)} />
+        <Button
+          buttonText="Confirm"
+          style={styles.button}
+          onPress={() => handleConfirmation(product)}
+        />
       </View>
     </View>
   );
@@ -234,4 +240,3 @@ const styles = StyleSheet.create({
 });
 
 export default ProductDetails;
-

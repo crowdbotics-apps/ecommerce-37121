@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from "react-native"
 
 export const globalOptions = {
   name: "ecommerce_37121",
@@ -7,6 +7,6 @@ export const globalOptions = {
 }
 export const modulesOptions = {
   "@modules/app-menu": {
-    "copy": "Routes available!"
+    copy: "Routes available!"
   }
 }

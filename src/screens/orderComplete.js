@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Text, StyleSheet, View, Image, TextInput } from "react-native";
+import React, { useState, useEffect } from "react"
+import { Text, StyleSheet, View, Image, TextInput } from "react-native"
 
-const OrderComplete = (params) => {
+const OrderComplete = params => {
   const [username, setUsername] = useState("User");
   useEffect(() => {
     setUsername("User");
-    
   }, []);
   return (
     <View style={styles.container}>
@@ -21,7 +20,7 @@ const OrderComplete = (params) => {
         <Text style={styles.inputText}>Verification Message</Text>
         <TextInput
           style={styles.input}
-          onChangeText={(text) => setUsername(text)}
+          onChangeText={text => setUsername(text)}
           placeholder="Click to see"
           placeholderTextColor="black"
           autoCapitalize="none"

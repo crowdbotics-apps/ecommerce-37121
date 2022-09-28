@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from "react";
-import {
-  Text,
-  StyleSheet,
-  View,
-  Image,
-  ScrollView,
-} from "react-native";
-import { Checkbox, RadioButton } from "react-native-paper";
-import { getUserAddress } from "../apis";
-import Button from "../components/Button";
-import DetailsCard from "../components/DetailCard";
-import Input from "../components/TextInput";
+import React, { useState, useEffect } from "react"
+import { Text, StyleSheet, View, Image, ScrollView } from 'react-native'
+import { Checkbox, RadioButton } from "react-native-paper"
+import { getUserAddress } from "../apis"
+import Button from "../components/Button"
+import DetailsCard from "../components/DetailCard"
+import Input from "../components/TextInput"
 
 const ShippingAddress = ({ navigation, route }) => {
   const [address, setAddress] = useState({});
@@ -21,25 +15,25 @@ const ShippingAddress = ({ navigation, route }) => {
   const [city, setCity] = useState("");
   const [basketData, setBasketData] = useState({})
   console.log("basketData: ", basketData)
-  const handleGetAddress = async() =>{
+  const handleGetAddress = async () => {
     const res = await getUserAddress();
-   setAddress(res[0])
+    setAddress(res[0])
   }
   useEffect(async () => {
     handleGetAddress();
-    if(route?.params?.basketData){
+    if (route?.params?.basketData) {
       setBasketData(route?.params?.basketData);
     }
   }, [])
-  
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={styles.paletteContainer}>
-            <View style={styles.unSelected}></View>
-            <View style={styles.unSelected}></View>
-            <View style={styles.unSelected}></View>
+            <View style={styles.unSelected} />
+            <View style={styles.unSelected} />
+            <View style={styles.unSelected} />
           </View>
           <Image
             source={require("../assets/3Dots.png")}
@@ -49,13 +43,15 @@ const ShippingAddress = ({ navigation, route }) => {
         <View style={styles.inputs}>
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>Search</Text>
-            <Input style={styles.input}
-              onChangeText={(text) => setUserName(text)}
+            <Input
+              style={styles.input}
+              onChangeText={text => setUserName(text)}
               value={userName}
               placeholder="Search Username"
               placeholderTextColor="#9B9B9B"
               autoCapitalize="none"
-              autoCorrect={false}></Input>
+              autoCorrect={false}
+            />
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>Payment options</Text>
@@ -64,26 +60,32 @@ const ShippingAddress = ({ navigation, route }) => {
                 value="first"
                 status={checked ? 'checked' : 'unchecked'}
                 onPress={() => setChecked(!checked)}
-               
               />
               <Text>Cash on delivery</Text>
             </View>
           </View>
         </View>
-        <DetailsCard orderAmount={20} deliveryCharges={1.5} totalAmount={21.5} />
+        <DetailsCard
+          orderAmount={20}
+          deliveryCharges={1.5}
+          totalAmount={21.5}
+        />
         <View style={styles.mapHeader}>
           <Text style={styles.mapHeaderText}>Map</Text>
           <Image source={require("../assets/locationIcon.png")} />
         </View>
         <View style={styles.mapImageContainer}>
-          <Image source={require("../assets/map.png")} style={styles.mapImage} />
+          <Image
+            source={require('../assets/map.png')}
+            style={styles.mapImage}
+          />
         </View>
         <View style={styles.halfInputs}>
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>City</Text>
             <Input
               style={styles.input}
-              onChangeText={(text) => setCity(text)}
+              onChangeText={text => setCity(text)}
               value={city}
               placeholder="Enter"
               placeholderTextColor="#9B9B9B"
@@ -95,7 +97,7 @@ const ShippingAddress = ({ navigation, route }) => {
             <Text style={styles.inputText}>Country</Text>
             <Input
               style={styles.input}
-              onChangeText={(text) => setCountry(text)}
+              onChangeText={text => setCountry(text)}
               value={country}
               placeholder="Search Username"
               placeholderTextColor="#9B9B9B"
@@ -109,7 +111,7 @@ const ShippingAddress = ({ navigation, route }) => {
             <Text style={styles.inputText}>State</Text>
             <Input
               style={styles.input}
-              onChangeText={(text) => setState(text)}
+              onChangeText={text => setState(text)}
               value={state}
               placeholder="Search Username"
               placeholderTextColor="#9B9B9B"
@@ -129,13 +131,21 @@ const ShippingAddress = ({ navigation, route }) => {
                   setChecked(!checked);
                 }}
                 disabled={true}
-                />
+              />
             </View>
           </View>
         </View>
         <View style={styles.btnContainer}>
-          <Button buttonText={"Continue"} onPress={() => { navigation.navigate("OrderComplete") }}>
-            <Image source={require("../assets/arrow.png")} style={styles.arrow} />
+          <Button
+            buttonText={'Continue'}
+            onPress={() => {
+              navigation.navigate('OrderComplete');
+            }}
+          >
+            <Image
+              source={require('../assets/arrow.png')}
+              style={styles.arrow}
+            />
           </Button>
         </View>
       </ScrollView>
@@ -200,7 +210,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     marginTop: 5
-
   },
   inputText: {
     fontSize: 16,
@@ -273,4 +282,3 @@ const styles = StyleSheet.create({
   }
 });
 export default ShippingAddress;
-

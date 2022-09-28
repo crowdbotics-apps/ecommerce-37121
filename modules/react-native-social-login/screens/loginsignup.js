@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 import {
   View,
   Text,
@@ -8,34 +8,34 @@ import {
   ActivityIndicator,
   Alert,
   Platform
-} from "react-native";
+} from "react-native"
 import {
   AppleButton,
   appleAuthAndroid
-} from "@invertase/react-native-apple-authentication";
-import { useSelector, useDispatch } from "react-redux";
-import { HOME_SCREEN_NAME, validateEmail } from "./constants";
-import { buttonStyles, textInputStyles, Color } from "./styles";
+} from "@invertase/react-native-apple-authentication"
+import { useSelector, useDispatch } from "react-redux"
+import { HOME_SCREEN_NAME, validateEmail } from "./constants"
+import { buttonStyles, textInputStyles, Color } from "./styles"
 import {
   GoogleSigninButton,
   GoogleSignin,
   statusCodes
-} from "@react-native-google-signin/google-signin";
-import { LoginManager, AccessToken } from "react-native-fbsdk";
-import { GOOGLE_WEB_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from "../auth/utils";
-import { appleForAndroid, appleForiOS } from "../auth/apple";
+} from "@react-native-google-signin/google-signin"
+import { LoginManager, AccessToken } from "react-native-fbsdk"
+import { GOOGLE_WEB_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from "../auth/utils"
+import { appleForAndroid, appleForiOS } from "../auth/apple"
 import {
   loginRequest,
   signupRequest,
   facebookLogin,
   googleLogin,
   appleLogin
-} from "../auth";
-import { unwrapResult } from "@reduxjs/toolkit";
-import { setItem } from "../../../src/utils";
+} from "../auth"
+import { unwrapResult } from "@reduxjs/toolkit"
+import { setItem } from "../../../src/utils"
 
 // Custom Text Input
-export const TextInputField = (props) => (
+export const TextInputField = props => (
   <View>
     <Text style={[textInputStyles.label, props.labelStyle]}>{props.label}</Text>
     <TextInput
@@ -50,27 +50,25 @@ export const TextInputField = (props) => (
 );
 
 // Custom Button
-export const Button = (props) => (
+export const Button = props => (
   <TouchableOpacity onPress={props.onPress} disabled={props.loading}>
     <View style={[buttonStyles.viewStyle, props.viewStyle]}>
-      {props.loading
-        ? (
+      {props.loading ? (
         <ActivityIndicator
           color={props.loadingColor ? props.loadingColor : Color.white}
           style={props.loadingStyle}
         />
-          )
-        : (
+      ) : (
         <Text style={[buttonStyles.textStyle, props.textStyle]}>
           {props.title}
         </Text>
-          )}
+      )}
     </View>
   </TouchableOpacity>
 );
 
 // Grouped Social Buttons View
-const SocialButtonsView = (props) => (
+const SocialButtonsView = props => (
   <View>
     <Text style={{ textAlign: "center", width: "100%", marginVertical: 5 }}>
       - or -
@@ -120,7 +118,7 @@ const onFacebookConnect = async (dispatch, navigation) => {
       const data = await AccessToken.getCurrentAccessToken();
       dispatch(facebookLogin({ access_token: data.accessToken }))
         .then(unwrapResult)
-        .then((res) => {
+        .then(res => {
           if (res.key) {
             setItem('token', res.key)
             navigation.navigate(HOME_SCREEN_NAME);
@@ -145,7 +143,7 @@ const onGoogleConnect = async (dispatch, navigation) => {
     const tokens = await GoogleSignin.getTokens();
     dispatch(googleLogin({ access_token: tokens.accessToken }))
       .then(unwrapResult)
-      .then((res) => {
+      .then(res => {
         if (res.key) {
           setItem('token', res.key)
           navigation.navigate(HOME_SCREEN_NAME);
@@ -169,7 +167,7 @@ const onAppleConnect = async (dispatch, navigation) => {
       appleLogin({ id_token: result.id_token, access_token: result.code })
     )
       .then(unwrapResult)
-      .then((res) => {
+      .then(res => {
         if (res.key) {
           setItem('token', res.key)
           navigation.navigate(HOME_SCREEN_NAME);
@@ -189,7 +187,7 @@ export const SignupTab = ({ navigation }) => {
     password: ""
   });
 
-  const { api } = useSelector((state) => state.Login);
+  const { api } = useSelector(state => state.Login);
   const dispatch = useDispatch();
 
   const onSignupPress = async () => {
@@ -222,7 +220,7 @@ export const SignupTab = ({ navigation }) => {
           "Registration Successful. A confirmation will be sent to your e-mail address."
         );
       })
-      .catch((err) => console.log(err.message));
+      .catch(err => console.log(err.message));
   };
 
   return (
@@ -232,7 +230,7 @@ export const SignupTab = ({ navigation }) => {
           keyboardType="email-address"
           label="Email address"
           placeholder="Email address"
-          onChangeText={(value) => setEmail(value)}
+          onChangeText={value => setEmail(value)}
           value={email}
           error={validationError.email}
         />
@@ -240,7 +238,7 @@ export const SignupTab = ({ navigation }) => {
           label="Password"
           placeholder="Password"
           secureTextEntry={true}
-          onChangeText={(value) => setPassword(value)}
+          onChangeText={value => setPassword(value)}
           value={password}
           error={validationError.password}
         />
@@ -248,7 +246,7 @@ export const SignupTab = ({ navigation }) => {
           label="Confirm Password"
           placeholder="Confirm Password"
           secureTextEntry={true}
-          onChangeText={(value) => setConfirmPassword(value)}
+          onChangeText={value => setConfirmPassword(value)}
           value={confirmPassword}
         />
       </View>
@@ -278,7 +276,7 @@ export const SignInTab = ({ navigation }) => {
     password: ""
   });
 
-  const { api } = useSelector((state) => state.Login);
+  const { api } = useSelector(state => state.Login);
   const dispatch = useDispatch();
 
   const onSigninPress = async () => {
@@ -298,13 +296,13 @@ export const SignInTab = ({ navigation }) => {
 
     dispatch(loginRequest({ username: email, password }))
       .then(unwrapResult)
-      .then((res) => {
+      .then(res => {
         if (res.token) {
           setItem('token', res.token)
           navigation.navigate(HOME_SCREEN_NAME);
         }
       })
-      .catch((err) => console.log(err.message));
+      .catch(err => console.log(err.message));
   };
 
   return (
@@ -314,7 +312,7 @@ export const SignInTab = ({ navigation }) => {
           keyboardType="email-address"
           label="Email address"
           placeholder="Email address"
-          onChangeText={(value) => setEmail(value)}
+          onChangeText={value => setEmail(value)}
           value={email}
           error={validationError.email}
         />
@@ -322,7 +320,7 @@ export const SignInTab = ({ navigation }) => {
           label="Password"
           placeholder="Password"
           secureTextEntry={true}
-          onChangeText={(value) => setPassword(value)}
+          onChangeText={value => setPassword(value)}
           value={password}
           error={validationError.password}
         />

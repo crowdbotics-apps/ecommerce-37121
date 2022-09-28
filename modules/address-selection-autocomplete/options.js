@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions } from "react-native"
 
 const { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
@@ -6,8 +6,8 @@ const ASPECT_RATIO = width / height;
 const guidelineBaseWidth = 350;
 const guidelineBaseHeight = 680;
 
-const scale = (size) => (width / guidelineBaseWidth) * size;
-const scaleVertical = (size) => (height / guidelineBaseHeight) * size;
+const scale = size => (width / guidelineBaseWidth) * size;
+const scaleVertical = size => (height / guidelineBaseHeight) * size;
 
 export const styles = StyleSheet.create({
   view: {
@@ -79,11 +79,16 @@ export const styles = StyleSheet.create({
     shadowRadius: 15.19,
     elevation: 23
   }
-
 });
 
 export const autoCompleteStyles = StyleSheet.create({
-  mainContainer: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", paddingHorizontal: 15, height: "100%" },
+  mainContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    paddingHorizontal: 15,
+    height: '100%'
+  },
   autoCompleteCOntainer: { zIndex: 1000, width: "90%", alignSelf: "center" },
   textInputContainer: {
     marginTop: 5,
@@ -103,7 +108,7 @@ export const autoCompleteStyles = StyleSheet.create({
   }
 });
 
-const GOOGLE_API_KEY = "AIzaSyCCVxYoYX8Gd70B6w7ZoGntENMnFfKJrI4";
+const GOOGLE_API_KEY = "AIzaSyCCVxYoYX8Gd70B6w7ZoGntENMnFfKJrI4"
 const addressAutocompleteOptions = {
   placeholder: "Enter address",
   initialRegion: {
@@ -114,10 +119,10 @@ const addressAutocompleteOptions = {
   },
   minLength: 2,
   fetchDetails: true,
-  onChangeText: (text) => { },
-  onAddressSelect: (data, details) => { },
-  onFail: () => { },
-  onNotFound: () => { },
+  onChangeText: text => {},
+  onAddressSelect: (data, details) => {},
+  onFail: () => {},
+  onNotFound: () => {},
   styles: "",
   hideMap: true,
   country: "us",
@@ -132,9 +137,10 @@ const addressAutocompleteOptions = {
   timeout: 20000,
   currentLocation: false,
   currentLocationLabel: "",
-  renderLeftButton: () => { },
-  renderRightButton: () => { },
-  markerUrl: "https://cdn2.iconfinder.com/data/icons/IconsLandVistaMapMarkersIconsDemo/256/MapMarker_Marker_Outside_Chartreuse.png",
+  renderLeftButton: () => {},
+  renderRightButton: () => {},
+  markerUrl:
+    "https://cdn2.iconfinder.com/data/icons/IconsLandVistaMapMarkersIconsDemo/256/MapMarker_Marker_Outside_Chartreuse.png",
   markerStyles: null
 };
 

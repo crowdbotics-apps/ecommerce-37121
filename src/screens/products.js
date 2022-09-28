@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Text, StyleSheet, View, FlatList } from "react-native";
-import { getProduct, getProductsList, productAvailability } from "../apis";
-import Product from "../components/Product";
-import TabView from "../components/TabView";
+import React, { useState, useEffect } from "react"
+import { Text, StyleSheet, View, FlatList } from "react-native"
+import { getProduct, getProductsList, productAvailability } from "../apis"
+import Product from "../components/Product"
+import TabView from "../components/TabView"
 
 const ProductListingScreen = ({ navigation }) => {
   const [productsList, setProductsList] = useState([])
- 
-   const handleProducts = async () => {
+
+  const handleProducts = async () => {
     const products = await getProductsList();
     var productList = [];
     let i = 0;
@@ -16,34 +16,34 @@ const ProductListingScreen = ({ navigation }) => {
       const availability = await productAvailability(product.availability);
       product.availability_status = availability
       productList.push(product);
-        i += 1;
-    } 
+      i += 1;
+    }
     setProductsList(productList)
   }
 
+  useEffect(async () => {
+    handleProducts();
+  }, []);
 
-useEffect( async () => {
-  handleProducts();
-}, []);
-
-
-return (
-  <View style={styles.container}>
-    <TabView tabTitles={["All", "Best Products"]} selected={0} />
-    <View style={styles.productsContainer}>
-      <FlatList
-        data={productsList}
-        numColumns={2}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <Product product={item} navigation={navigation} />}
-        columnWrapperStyle={{
-          justifyContent: "space-around"
-        }}
-        showsVerticalScrollIndicator={false}
-      />
+  return (
+    <View style={styles.container}>
+      <TabView tabTitles={["All", "Best Products"]} selected={0} />
+      <View style={styles.productsContainer}>
+        <FlatList
+          data={productsList}
+          numColumns={2}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({ item }) => (
+            <Product product={item} navigation={navigation} />
+          )}
+          columnWrapperStyle={{
+            justifyContent: "space-around"
+          }}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
     </View>
-  </View>
-);
+  );
 };
 
 const styles = StyleSheet.create({
@@ -58,8 +58,3 @@ const styles = StyleSheet.create({
 });
 
 export default ProductListingScreen;
-
-
-
-
-
