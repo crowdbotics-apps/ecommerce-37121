@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ecommerce-37121</string>
+    <string name="facebook_app_id">Your_facebook_id_here</string>
+    <string name="server_client_id">XXXXX-XXXXXXXX.apps.googleusercontent.com</string>
 </resources>

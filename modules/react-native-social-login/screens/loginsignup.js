@@ -32,6 +32,7 @@ import {
   appleLogin
 } from "../auth";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { setItem } from "../../../src/utils";
 
 // Custom Text Input
 export const TextInputField = (props) => (
@@ -120,7 +121,10 @@ const onFacebookConnect = async (dispatch, navigation) => {
       dispatch(facebookLogin({ access_token: data.accessToken }))
         .then(unwrapResult)
         .then((res) => {
-          if (res.key) navigation.navigate(HOME_SCREEN_NAME);
+          if (res.key) {
+            setItem('token', res.key)
+            navigation.navigate(HOME_SCREEN_NAME);
+          }
         });
     }
   } catch (err) {
@@ -142,7 +146,10 @@ const onGoogleConnect = async (dispatch, navigation) => {
     dispatch(googleLogin({ access_token: tokens.accessToken }))
       .then(unwrapResult)
       .then((res) => {
-        if (res.key) navigation.navigate(HOME_SCREEN_NAME);
+        if (res.key) {
+          setItem('token', res.key)
+          navigation.navigate(HOME_SCREEN_NAME);
+        }
       });
   } catch (err) {
     if (err.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -163,7 +170,10 @@ const onAppleConnect = async (dispatch, navigation) => {
     )
       .then(unwrapResult)
       .then((res) => {
-        if (res.key) navigation.navigate(HOME_SCREEN_NAME);
+        if (res.key) {
+          setItem('token', res.key)
+          navigation.navigate(HOME_SCREEN_NAME);
+        }
       });
   } catch (err) {
     console.log(JSON.stringify(err));
@@ -179,7 +189,7 @@ export const SignupTab = ({ navigation }) => {
     password: ""
   });
 
-  const { api } = useSelector((state) => state.login);
+  const { api } = useSelector((state) => state.Login);
   const dispatch = useDispatch();
 
   const onSignupPress = async () => {
@@ -268,16 +278,16 @@ export const SignInTab = ({ navigation }) => {
     password: ""
   });
 
-  const { api } = useSelector((state) => state.login);
+  const { api } = useSelector((state) => state.Login);
   const dispatch = useDispatch();
 
   const onSigninPress = async () => {
-    if (!validateEmail.test(email)) {
-      return setValidationError({
-        email: "Please enter a valid email address.",
-        password: ""
-      });
-    }
+    // if (!validateEmail.test(email)) {
+    //   return setValidationError({
+    //     email: "Please enter a valid email address.",
+    //     password: ""
+    //   });
+    // }
 
     if (!password) {
       return setValidationError({
@@ -289,7 +299,10 @@ export const SignInTab = ({ navigation }) => {
     dispatch(loginRequest({ username: email, password }))
       .then(unwrapResult)
       .then((res) => {
-        if (res.token) navigation.navigate(HOME_SCREEN_NAME);
+        if (res.token) {
+          setItem('token', res.token)
+          navigation.navigate(HOME_SCREEN_NAME);
+        }
       })
       .catch((err) => console.log(err.message));
   };
