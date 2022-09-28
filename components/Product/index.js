@@ -2,11 +2,6 @@ import React from "react"
 import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native"
 
 const Product = ({ product, navigation }) => {
-  const availability = {
-    color: true ? "#12D790" : "#EA4335",
-    fontSize: 12,
-    fontWeight: "bold"
-  };
   return (
     <View style={productStyles.container}>
       <View style={productStyles.imageContainer}>
@@ -21,20 +16,13 @@ const Product = ({ product, navigation }) => {
           />
         </TouchableOpacity>
 
-        <Image
-          source={
-            true
-              ? require("../../assets/isFavouriteIcon.png")
-              : require("../../assets/favIcon.png")
-          }
-          style={productStyles.favIcon}
-        />
+
       </View>
       <View style={productStyles.descriptionContainer}>
         <Text style={productStyles.bold}>{product.title}</Text>
         <View style={productStyles.availabilityTextContainer}>
           <Text style={productStyles.availabilityText}>Purchase: </Text>
-          <Text style={availability}>
+          <Text style={{...productStyles.availability, color: product?.availability_status?.is_available_to_buy ? "#12D790" : "#EA4335"}}>
             {product?.availability_status?.is_available_to_buy
               ? 'Available'
               : "Not available"}
@@ -84,6 +72,10 @@ const productStyles = StyleSheet.create({
     position: "absolute",
     right: 10,
     top: 10
+  },
+  availability: {
+    fontSize: 12,
+    fontWeight: "bold"
   }
 });
 

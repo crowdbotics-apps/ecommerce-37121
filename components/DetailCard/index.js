@@ -6,18 +6,18 @@ const DetailsCard = ({ basketData }) => {
       <View style={detailsCardStyles.pricing}>
         <Text style={detailsCardStyles.pricingText}>Order</Text>
         <Text style={detailsCardStyles.pricingText}>
-          {basketData?.total_excl_tax}$
+          ${basketData?.total_excl_tax}
         </Text>
       </View>
       <View style={detailsCardStyles.pricing}>
         <Text style={detailsCardStyles.pricingText}>Delivery</Text>
         <Text style={detailsCardStyles.pricingText}>
-          {basketData?.delivery_fee}$
+          ${basketData?.delivery_fee}
         </Text>
       </View>
       <View style={detailsCardStyles.pricing}>
         <Text style={detailsCardStyles.summaryText}>Summary</Text>
-        <Text style={detailsCardStyles.summaryText}>{basketData?.total}$</Text>
+        <Text style={detailsCardStyles.summaryText}>${basketData?.total}</Text>
       </View>
     </View>
   );

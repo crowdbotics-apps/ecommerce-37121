@@ -67,7 +67,6 @@ const getStore = globalState => {
 }
 
 const App = () => {
-  console.log('screens', screens)
   const global = useContext(GlobalOptionsContext)
   const Navigation = getNavigation(modules, screens, initialRoute)
   const store = getStore(global)

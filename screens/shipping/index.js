@@ -14,7 +14,7 @@ const ShippingAddress = ({ navigation, route }) => {
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [basketData, setBasketData] = useState({})
-  console.log("basketData: ", basketData)
+
   const handleGetAddress = async () => {
     const res = await getUserAddress();
     setAddress(res[0])
@@ -24,37 +24,20 @@ const ShippingAddress = ({ navigation, route }) => {
     if (route?.params?.basketData) {
       setBasketData(route?.params?.basketData);
     }
+    if (route?.params?.address) {
+      setAddress(route?.params?.address);
+      setState(route?.params?.address.state)
+      setCity(route?.params?.address.line4)
+    }
+    console.log("route?.params: ", route?.params)
   }, [])
 
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <View style={styles.paletteContainer}>
-            <View style={styles.unSelected} />
-            <View style={styles.unSelected} />
-            <View style={styles.unSelected} />
-          </View>
-          <Image
-            source={require("../../assets/3Dots.png")}
-            style={styles.threeDots}
-          />
-        </View>
         <View style={styles.inputs}>
           <View style={styles.inputContainer}>
-            <Text style={styles.inputText}>Search</Text>
-            <Input
-              style={styles.input}
-              onChangeText={text => setUserName(text)}
-              value={userName}
-              placeholder="Search Username"
-              placeholderTextColor="#9B9B9B"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputText}>Payment options</Text>
+            <Text style={{...styles.inputText, fontWeight: "bold"}}>Payment options</Text>
             <View style={styles.paymentContainer}>
               <RadioButton
                 value="first"
@@ -66,9 +49,7 @@ const ShippingAddress = ({ navigation, route }) => {
           </View>
         </View>
         <DetailsCard
-          orderAmount={20}
-          deliveryCharges={1.5}
-          totalAmount={21.5}
+          basketData={basketData}
         />
         <View style={styles.mapHeader}>
           <Text style={styles.mapHeaderText}>Map</Text>
@@ -209,7 +190,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    marginTop: 5
+    marginTop: 15
   },
   inputText: {
     fontSize: 16,

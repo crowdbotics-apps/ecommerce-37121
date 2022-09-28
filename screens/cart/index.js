@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { useEffect } from "react"
 import { Text, Image, StyleSheet, View, ScrollView } from "react-native"
-import { getBasket, removeFromBask } from "../../apis"
+import { getBasket, removeFromBasket } from "../../apis"
 import Button from "../../components/Button"
 import DetailsCard from "../../components/DetailCard"
 import OrderCard from "../../components/OrderCard"
@@ -38,21 +38,13 @@ const ShoppingCart = ({ navigation }) => {
     >
       <DetailsCard basketData={basketData} />
       <View style={styles.container}>
-        <View style={styles.tabView}>
-          <View style={styles.selectedTab}>
-            <Text>Select all</Text>
-          </View>
-          <View style={styles.tabItem}>
-            <Text>Delete selected</Text>
-          </View>
-        </View>
         <View style={styles.cardContent}>
-          <Text style={styles.chartText}>Chart</Text>
-          <Image
+          <Text style={styles.chartText}>Cart</Text>
+          {/* <Image
             resizeMode="contain"
             style={styles.cartImage}
             source={require('../../assets/cart.png')}
-          />
+          /> */}
         </View>
         {cartProducts &&
           cartProducts.map((product, index) => (

@@ -79,7 +79,7 @@ const Billing = ({ navigation, route }) => {
         <View style={styles.btnContainer}>
           <Button
             buttonText={"Proceed"}
-            onPress={() => navigation.navigate("shipping", { basketData })}
+            onPress={() => navigation.navigate("shipping", { basketData, address })}
           />
         </View>
       </View>
@@ -164,7 +164,6 @@ export default Billing
 
 const OrderCard = ({ item }) => {
   const { product } = item
-  console.log('images', product?.images[0].original);
   return (
     <View style={orderStyles.container}>
       <View style={orderStyles.order}>
@@ -181,7 +180,7 @@ const OrderCard = ({ item }) => {
         </View>
       </View>
       <View>
-        <Text style={orderStyles.orderPrice}>{product?.price?.excl_tax}</Text>
+        <Text style={orderStyles.orderPrice}>${product?.price?.excl_tax}</Text>
       </View>
     </View>
   )
