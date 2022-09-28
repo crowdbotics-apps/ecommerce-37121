@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   StyleSheet,
@@ -7,17 +7,31 @@ import {
   ScrollView,
 } from "react-native";
 import { Checkbox, RadioButton } from "react-native-paper";
+import { getUserAddress } from "../apis";
 import Button from "../components/Button";
 import DetailsCard from "../components/DetailCard";
 import Input from "../components/TextInput";
 
-const ShippingAddress = ({ navigation }) => {
-  const [address, setAddress] = useState("");
+const ShippingAddress = ({ navigation, route }) => {
+  const [address, setAddress] = useState({});
   const [checked, setChecked] = useState(true);
-  const [city, setCity] = useState("");
+  const [userName, setUserName] = useState("");
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
-
+  const [city, setCity] = useState("");
+  const [basketData, setBasketData] = useState({})
+  console.log("basketData: ", basketData)
+  const handleGetAddress = async() =>{
+    const res = await getUserAddress();
+   setAddress(res[0])
+  }
+  useEffect(async () => {
+    handleGetAddress();
+    if(route?.params?.basketData){
+      setBasketData(route?.params?.basketData);
+    }
+  }, [])
+  
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -36,8 +50,8 @@ const ShippingAddress = ({ navigation }) => {
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>Search</Text>
             <Input style={styles.input}
-              onChangeText={(text) => setAddress(text)}
-              value={address}
+              onChangeText={(text) => setUserName(text)}
+              value={userName}
               placeholder="Search Username"
               placeholderTextColor="#9B9B9B"
               autoCapitalize="none"

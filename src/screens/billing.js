@@ -4,17 +4,44 @@ import Button from "../components/Button";
 import DetailsCard from "../components/DetailCard";
 import { modules } from "@modules";
 import { useEffect } from "react";
+import { addUserAddress } from "../apis";
 const Billing = ({ navigation, route }) => {
-  const [address, setAddress] = useState(null);
+  const [address, setAddress] = useState({line1:"", state: "", line4: ""});
   const AddressAutoComplete = modules[0].value.navigator;  //module_index : position of the module in modules folder
   const [cartProducts, setCartProducts] = useState([])
   const [basketData, setBasketData] = useState({})
 
-
   const onSelectAddress = (address) => {
     setAddress(address.formatted_address);
+    const arr = address.formatted_address.split(",");
+    const reverse = arr.reverse();
+    setAddress({line1: reverse[reverse.length-1], state: reverse[1], line4: reverse[2]})
+    
   }
+const handleAddAddresses = async () =>{
+  const res = await addUserAddress({
+    title: "Mr",
+    first_name: "Saad",
+    last_name:"Abid",
+    line1: "Satellite Town",
+    line2: "",
+    line3: "",
+    line4: "",
+    line4:"Bwp",
+    state:"Punjab",
+    postcode: "",
+    phone_number: "",
+    notes: "",
+    is_default_for_shipping: false,
+    is_default_for_billing: false,
+    country: "https://drone-express-36671.botics.co/api/countries/US/",
+    lat: null,
+    lng: null
+  });
+ 
 
+  console.log("Address: ", res)
+}
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
     if(route?.params?.basketData){
@@ -22,8 +49,10 @@ const Billing = ({ navigation, route }) => {
       setCartProducts(line_details)
       setBasketData(route?.params?.basketData);
     }
+    
   }, [])
 
+ 
   
   return (
     <View style={{ backgroundColor: "#FFF", width: "100%", height: '100%' }}>
@@ -52,7 +81,7 @@ const Billing = ({ navigation, route }) => {
         </ScrollView>
         </View>
         <View style={styles.btnContainer}>
-          <Button buttonText={"Proceed"} onPress={() => { navigation.navigate("Shipping") }} />
+          <Button buttonText={"Proceed"} onPress={() =>navigation.navigate("Shipping", {basketData})}/>
         </View>
       </View>
     </View>

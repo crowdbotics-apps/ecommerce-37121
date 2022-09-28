@@ -1,8 +1,10 @@
 import React from "react";
+import { Pressable } from "react-native";
 import { Text, Image, StyleSheet, View } from "react-native";
 
-const OrderCard = ({item}) => {
+const OrderCard = ({item, handleRemoveProduct}) => {
   const {product} = item;
+  
 
     return (
       <View style={orderStyles.container}>
@@ -11,14 +13,16 @@ const OrderCard = ({item}) => {
             <Image source={{uri: product.images[0].original}} style={orderStyles.productImage}/>
           </View>
           <View style={orderStyles.description}>
-            <Text>Order name</Text>
+            <Text>{product?.title}</Text>
             <View style={orderStyles.bottomComponent}>
               <View style={orderStyles.quantity}>
                 <Text>-</Text>
                 <Text style={{ fontWeight: "bold" }}>{item?.quantity}</Text>
                 <Text>+</Text>
               </View>
+              <Pressable onPress={() => handleRemoveProduct(item?.url)}>
               <Image source={require("../../assets/delete.png")} style={orderStyles.img} />
+              </Pressable>
             </View>
           </View>
         </View>

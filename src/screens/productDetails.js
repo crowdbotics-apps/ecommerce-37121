@@ -41,7 +41,6 @@ const ProductDetails = ({ navigation, route }) => {
   const handleConfirmation = async (product) => {
     try {
       const res = await addToBasket({ quantity, url: product.id, partner_id: 4 })
-      console.log("ADDBasket: ", res);
       navigation.navigate("ShoppingCart")
 
     } catch (error) {

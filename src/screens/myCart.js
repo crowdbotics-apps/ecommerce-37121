@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Text, Image, StyleSheet, View, ScrollView } from "react-native";
-import { getBasket } from "../apis";
+import { getBasket, removeFromBasket } from "../apis";
 import Button from "../components/Button";
 import DetailsCard from "../components/DetailCard";
 import OrderCard from "../components/OrderCard";
@@ -9,16 +9,30 @@ import OrderCard from "../components/OrderCard";
 const ShoppingCart = ({ navigation }) => {
 
   const [cartProducts, setCartProducts] = useState([])
-const [basketData, setBasketData] = useState({})
-  useEffect(async () => {
+  const [basketData, setBasketData] = useState({});
+
+  const handleGetBasket = async () => {
     const basket = await getBasket();
     setCartProducts(basket[0].line_details)
     setBasketData(basket[0]);
+  }
+  useEffect(() => {
+    handleGetBasket();
   }, [])
+
+  const handleRemoveProduct = async (url) => {
+    try {
+      await removeFromBasket(url).then((res) => {
+        handleGetBasket();
+      }).catch((err) => console.log("ERROR: ", err))
+    } catch (error) {
+      console.log("ERROR: ", error)
+    }
+  }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{ backgroundColor: "#FFF" }}>
-      <DetailsCard basketData = {basketData}></DetailsCard>
+      <DetailsCard basketData={basketData}></DetailsCard>
       <View style={styles.container}>
 
         <View style={styles.tabView}>
@@ -35,12 +49,12 @@ const [basketData, setBasketData] = useState({})
         </View>
         {
           cartProducts && cartProducts.map((product, index) =>
-          <OrderCard item={product} key={index}/>
+            <OrderCard item={product} handleRemoveProduct={handleRemoveProduct} key={index} />
           )
         }
-        
+
         <View style={styles.btnContainer}>
-          <Button buttonText="Checkout" onPress={() => { navigation.navigate("Billing", {basketData}) }} />
+          <Button buttonText="Checkout" onPress={() => { navigation.navigate("Billing", { basketData }) }} />
         </View>
       </View>
     </ScrollView>

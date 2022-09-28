@@ -92,11 +92,11 @@ export const getProductsList = async () => {
     return data;
   };
 
-  export const getBasketLines = async (basket_id) => {
+  export const removeFromBasket = async (url) => {
     const response = await fetch(
-      `${BASE_URL}/api/baskets/${basket_id}/lines/`,
+      url,
       {
-        method: "GET",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
@@ -104,5 +104,24 @@ export const getProductsList = async () => {
       }
     );
     const data = await response.json();
+    return data;
+  };
+
+
+  export const getUserAddress = async () => {
+    const response = await fetch(
+      `${BASE_URL}/api/useraddresses/`,
+      {
+        method: "GET",
+        headers: {
+          "Accept": "*/*",
+          "Content-Type": "application/json",
+          Authorization: "Token bc1b3be1257f4a2739031f35730d1ea622b84a61",
+        },
+        
+      }
+    );
+    const data = await response.json();
+
     return data;
   };
