@@ -40,9 +40,7 @@ export const getPrice = async url => {
 export const productAvailability = async url => {
   const response = await fetch(url, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    }
+    headers: { "Content-Type": "application/json" }
   });
   const data = await response.json();
   return data;
@@ -68,7 +66,7 @@ export const getBasket = async () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Token" + token
+      Authorization: "Token " + token
     }
   });
   const data = await response.json();
@@ -114,11 +112,28 @@ export const startCheckout = async (obj) => {
       Authorization: "Token " + token
     },
     body:JSON.stringify(obj)
+  })
+  const data = await response.json();
+
+  return data;
+}
+
+export const addUserAddress = async (obj) => {
+  const token = await getItem("token")
+  const response = await fetch(`${BASE_URL}/api/useraddresses/`, {
+    method: "POST",
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: "Token " + token
+    },
+    body:JSON.stringify(obj)
   });
   const data = await response.json();
 
   return data;
 };
+
 
 export const getPaymentMethod = async () => {
   const token = await getItem("token")

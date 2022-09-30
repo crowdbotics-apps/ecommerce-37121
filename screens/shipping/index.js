@@ -9,7 +9,6 @@ import Input from "../../components/TextInput"
 const ShippingAddress = ({ navigation, route }) => {
   const [address, setAddress] = useState({});
   const [checked, setChecked] = useState(true);
-  const [userName, setUserName] = useState("");
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
@@ -98,6 +97,7 @@ const ShippingAddress = ({ navigation, route }) => {
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>City</Text>
             <Input
+              editable={false}
               style={styles.input}
               onChangeText={text => setCity(text)}
               value={shippingAddress?.line4}
@@ -110,6 +110,7 @@ const ShippingAddress = ({ navigation, route }) => {
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>Country</Text>
             <Input
+              editable={false}
               style={styles.input}
               onChangeText={text => setCountry(text)}
               value={country}
@@ -124,6 +125,7 @@ const ShippingAddress = ({ navigation, route }) => {
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>State</Text>
             <Input
+              editable={false}
               style={styles.input}
               onChangeText={text => setState(text)}
               value={shippingAddress?.state}
@@ -139,13 +141,7 @@ const ShippingAddress = ({ navigation, route }) => {
               <Text style={styles.placeholderText}>Confitmation</Text>
               {/* <Image source={require("../assets/checkbox.png")} />
                */}
-              <Checkbox
-                status={checked ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  setChecked(!checked);
-                }}
-                disabled={true}
-              />
+              <Checkbox status={"checked"}/>
             </View>
           </View>
         </View>
