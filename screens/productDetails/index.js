@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, Image, Pressable } from "react-native"
 import { Slider } from "react-native-elements"
 import { addToBasket, getPrice } from "../../apis"
 import Button from "../../components/Button"
+import CartBox from "../../components/CartBox"
+import { productsInCart } from "../../utils"
 
 const ProductDetails = ({ navigation, route }) => {
   const availability = {
@@ -13,6 +15,7 @@ const ProductDetails = ({ navigation, route }) => {
   const [product, setProduct] = useState({});
   const [productPrice, setProductPrice] = useState(1);
   const [quantity, setQuantity] = useState(1);
+  const [productQuantity, setProductQuantity] = useState("0")
   const [description, setDescription] = useState(
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec blandit elementum sapien ac feugiat. Donec tempor dapibus turpis, ac fermentum nulla tempus eu.'
   )
@@ -25,7 +28,12 @@ const ProductDetails = ({ navigation, route }) => {
     if (route?.params?.product) {
       setProduct(route?.params?.product)
       handlePrice(route?.params?.product?.price);
-    }
+    };
+    const cartProducts = async () =>{
+      const productQuantity= await productsInCart();
+      setProductQuantity(productQuantity)
+     }
+     cartProducts();
   }, []);
 
   const increment = () => {
@@ -63,7 +71,10 @@ const ProductDetails = ({ navigation, route }) => {
       </View>
       <View style={styles.cardContainer}>
         <View style={styles.bar} />
+        <View style={styles.cartContainer}>
         <Text style={styles.title}>{product?.title}</Text>
+        <CartBox navigation={navigation} quantity={productQuantity}></CartBox>
+        </View>
         <Text style={styles.description}>{description}</Text>
         <View style={styles.availabilityContainer}>
           <Text style={styles.statusText}>Availability Status: </Text>
@@ -75,8 +86,8 @@ const ProductDetails = ({ navigation, route }) => {
         </View>
         <View style={styles.counterContainer}>
           <View style={styles.priceContainer}>
-            <Text style={styles.priceText}>${productPrice.excl_tax}</Text>
-            <Text style={styles.acctualPrice}>${productPrice.incl_tax}</Text>
+            <Text style={styles.priceText}>${productPrice?.excl_tax}</Text>
+            <Text style={styles.acctualPrice}>${productPrice?.incl_tax}</Text>
           </View>
 
           <View style={styles.counter}>
@@ -236,7 +247,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 15
   },
-  statusText: { fontSize: 12, fontWeight: "bold", color: "#626468" }
+  statusText: { fontSize: 12, fontWeight: "bold", color: "#626468" },
+  cartContainer:{ flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",}
 });
 
 export default ProductDetails;

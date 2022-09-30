@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Text, StyleSheet, View, Image, ScrollView } from 'react-native'
 import { Checkbox, RadioButton } from "react-native-paper"
-import { getUserAddress } from "../../apis"
+import { getCountry, getUserAddress, startCheckout } from "../../apis"
 import Button from "../../components/Button"
 import DetailsCard from "../../components/DetailCard"
 import Input from "../../components/TextInput"
@@ -13,31 +13,64 @@ const ShippingAddress = ({ navigation, route }) => {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
-  const [basketData, setBasketData] = useState({})
+  const [shippingCharge, setShippingCharge] = useState({
+    currency: "USD",
+    excl_tax: "0.0",
+    tax: "0.0"
+  });
+  const [shippingAddress, setShippingAddress] = useState({});
+  const [basketDataObj, setBasketDataObj] = useState({})
 
   const handleGetAddress = async () => {
     const res = await getUserAddress();
-    setAddress(res[0])
+    setAddress(res[0]);
+    setShippingAddress(res[0]);
+    const response = await getCountry(res[0].country);
+    setCountry(response.name)
   }
+  
+  // @ts-ignore
   useEffect(async () => {
     handleGetAddress();
     if (route?.params?.basketData) {
-      setBasketData(route?.params?.basketData);
+      const { basketData } = route?.params;
+      setBasketDataObj(basketData);
+      setShippingCharge({...shippingCharge, currency: basketData.currency, excl_tax: basketData.delivery_fee, tax: basketData.total_tax})
     }
-    if (route?.params?.address) {
-      setAddress(route?.params?.address);
-      setState(route?.params?.address.state)
-      setCity(route?.params?.address.line4)
-    }
-    console.log("route?.params: ", route?.params)
   }, [])
+
+  const handleCheckout = async () => {
+    const obj = {
+      basket: basketDataObj?.url,
+      guest_email: "foo@example.com",
+      total: basketDataObj?.total,
+      shipping_charge: shippingCharge,
+      shipping_method_code: "no-shipping-required",
+      shipping_address: shippingAddress,
+      payment: {
+        stripe: {
+          enabled: true,
+          amount: basketDataObj?.total
+        }
+      }
+    }
+    try {
+      const checkout = await startCheckout(obj);
+      navigation.navigate('orderComplete', {userInfo: checkout?.shipping_address});
+
+    } catch (error) {
+      console.log("Error: ", error)
+    }
+
+
+  }
 
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.inputs}>
           <View style={styles.inputContainer}>
-            <Text style={{...styles.inputText, fontWeight: "bold"}}>Payment options</Text>
+            <Text style={{ ...styles.inputText, fontWeight: "bold" }}>Payment options</Text>
             <View style={styles.paymentContainer}>
               <RadioButton
                 value="first"
@@ -49,7 +82,7 @@ const ShippingAddress = ({ navigation, route }) => {
           </View>
         </View>
         <DetailsCard
-          basketData={basketData}
+          basketData={basketDataObj}
         />
         <View style={styles.mapHeader}>
           <Text style={styles.mapHeaderText}>Map</Text>
@@ -67,7 +100,7 @@ const ShippingAddress = ({ navigation, route }) => {
             <Input
               style={styles.input}
               onChangeText={text => setCity(text)}
-              value={city}
+              value={shippingAddress?.line4}
               placeholder="Enter"
               placeholderTextColor="#9B9B9B"
               autoCapitalize="none"
@@ -93,7 +126,7 @@ const ShippingAddress = ({ navigation, route }) => {
             <Input
               style={styles.input}
               onChangeText={text => setState(text)}
-              value={state}
+              value={shippingAddress?.state}
               placeholder="Search Username"
               placeholderTextColor="#9B9B9B"
               autoCapitalize="none"
@@ -119,9 +152,7 @@ const ShippingAddress = ({ navigation, route }) => {
         <View style={styles.btnContainer}>
           <Button
             buttonText={'Continue'}
-            onPress={() => {
-              navigation.navigate('orderComplete');
-            }}
+            onPress={handleCheckout}
           >
             <Image
               source={require('../../assets/arrow.png')}

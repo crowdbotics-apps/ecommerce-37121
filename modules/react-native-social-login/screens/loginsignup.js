@@ -223,6 +223,28 @@ export const SignupTab = ({ navigation }) => {
       .catch(err => console.log(err.message));
   };
 
+  const resetValidations = () =>{
+    return setValidationError({
+       email: "",
+       password: ""
+     });
+   }
+
+  const handleInputEmail = (value) =>{
+    setEmail(value)
+    resetValidations()
+  }
+
+  const handleInputPassword = (value) =>{
+    setPassword(value)
+    resetValidations()
+  }
+
+  const handleInputConfirmPassword = (value) =>{
+    setConfirmPassword(value)
+    resetValidations()
+  }
+
   return (
     <KeyboardAvoidingView>
       <View style={{ marginVertical: 10, marginHorizontal: 15 }}>
@@ -230,7 +252,7 @@ export const SignupTab = ({ navigation }) => {
           keyboardType="email-address"
           label="Email address"
           placeholder="Email address"
-          onChangeText={value => setEmail(value)}
+          onChangeText={value => handleInputEmail(value)}
           value={email}
           error={validationError.email}
         />
@@ -238,7 +260,7 @@ export const SignupTab = ({ navigation }) => {
           label="Password"
           placeholder="Password"
           secureTextEntry={true}
-          onChangeText={value => setPassword(value)}
+          onChangeText={value => handleInputPassword(value)}
           value={password}
           error={validationError.password}
         />
@@ -246,7 +268,7 @@ export const SignupTab = ({ navigation }) => {
           label="Confirm Password"
           placeholder="Confirm Password"
           secureTextEntry={true}
-          onChangeText={value => setConfirmPassword(value)}
+          onChangeText={value => handleInputConfirmPassword(value)}
           value={confirmPassword}
         />
       </View>
@@ -280,12 +302,12 @@ export const SignInTab = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const onSigninPress = async () => {
-    // if (!validateEmail.test(email)) {
-    //   return setValidationError({
-    //     email: "Please enter a valid email address.",
-    //     password: ""
-    //   });
-    // }
+    if (!validateEmail.test(email)) {
+      return setValidationError({
+        email: "Please enter a valid email address.",
+        password: ""
+      });
+    }
 
     if (!password) {
       return setValidationError({
@@ -305,6 +327,23 @@ export const SignInTab = ({ navigation }) => {
       .catch(err => console.log(err.message));
   };
 
+  const resetValidations = () =>{
+   return setValidationError({
+      email: "",
+      password: ""
+    });
+  }
+
+  const handleInputEmail = (value) =>{
+    setEmail(value)
+    resetValidations()
+  }
+
+  const handleInputPassword = (value) =>{
+    setPassword(value)
+    resetValidations()
+  }
+
   return (
     <KeyboardAvoidingView>
       <View style={{ marginVertical: 10, marginHorizontal: 15 }}>
@@ -312,7 +351,7 @@ export const SignInTab = ({ navigation }) => {
           keyboardType="email-address"
           label="Email address"
           placeholder="Email address"
-          onChangeText={value => setEmail(value)}
+          onChangeText={value => handleInputEmail(value)}
           value={email}
           error={validationError.email}
         />
@@ -320,7 +359,7 @@ export const SignInTab = ({ navigation }) => {
           label="Password"
           placeholder="Password"
           secureTextEntry={true}
-          onChangeText={value => setPassword(value)}
+          onChangeText={value => handleInputPassword(value)}
           value={password}
           error={validationError.password}
         />

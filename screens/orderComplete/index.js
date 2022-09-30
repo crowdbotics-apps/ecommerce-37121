@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react"
 import { Text, StyleSheet, View, Image, TextInput } from "react-native"
 
-const OrderComplete = params => {
+const OrderComplete = ({navigation, route}) => {
   const [username, setUsername] = useState("User");
   useEffect(() => {
-    setUsername("User");
+    if(route?.params.userInfo){
+      const {userInfo} = route.params;
+      setUsername(userInfo?.first_name)
+    }
   }, []);
   return (
     <View style={styles.container}>
