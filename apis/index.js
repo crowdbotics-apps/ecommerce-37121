@@ -40,9 +40,7 @@ export const getPrice = async url => {
 export const productAvailability = async url => {
   const response = await fetch(url, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    }
+    headers: { "Content-Type": "application/json" }
   });
   const data = await response.json();
   return data;
@@ -54,7 +52,7 @@ export const addToBasket = async obj => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Token" + token
+      Authorization: "Token " + token
     },
     body: JSON.stringify(obj)
   });
@@ -68,7 +66,7 @@ export const getBasket = async () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Token" + token
+      Authorization: "Token " + token
     }
   });
   const data = await response.json();
@@ -81,7 +79,7 @@ export const removeFromBasket = async url => {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Token" + token
+      Authorization: "Token " + token
     }
   });
   const data = await response.json();
@@ -95,10 +93,41 @@ export const getUserAddress = async () => {
     headers: {
       Accept: "*/*",
       "Content-Type": "application/json",
-      Authorization: "Token" + token
+      Authorization: "Token " + token
     }
   });
   const data = await response.json();
 
   return data;
 };
+
+export const addUserAddress = async (obj) => {
+  const token = await getItem("token")
+  const response = await fetch(`${BASE_URL}/api/useraddresses/`, {
+    method: "POST",
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: "Token " + token
+    },
+    body: JSON.stringify(obj)
+  });
+  const data = await response.json();
+  return data;
+}
+
+export const placeOrder = async (obj) => {
+  const token = await getItem("token")
+  const response = await fetch(`${BASE_URL}/api/checkout/`, {
+    method: "POST",
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: "Token " + token
+    },
+    body: JSON.stringify(obj)
+  });
+  console.log(token, 'obj', obj)
+  const data = await response.json();
+  return data;
+}

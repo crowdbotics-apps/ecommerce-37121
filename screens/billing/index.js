@@ -4,46 +4,49 @@ import Button from '../../components/Button'
 import DetailsCard from '../../components/DetailCard'
 import { modules } from '@modules'
 import { useEffect } from 'react'
-// import { getUserAddress } from '../apis';
+import { addUserAddress } from '../../apis';
 
 const Billing = ({ navigation, route }) => {
-  const [address, setAddress] = useState({ line1: "", state: "", line4: "" })
+  const [address, setAddress] = useState({
+    formatted_address: "",
+    country: "",
+    state: "",
+    city: "",
+    lat: "",
+    lng: ""
+  })
   const AddressAutoComplete = modules[0].value.navigator //module_index : position of the module in modules folder
   const [cartProducts, setCartProducts] = useState([]);
   const [basketData, setBasketData] = useState({});
 
-  const onSelectAddress = address => {
-    setAddress(address.formatted_address)
-    const arr = address.formatted_address.split(',')
+  const onSelectAddress = data => {
+    const arr = data.formatted_address.split(',')
     const reverse = arr.reverse()
     setAddress({
-      line1: reverse[reverse.length - 1],
+      formatted_address: data.formatted_address,
+      country: reverse[0],
       state: reverse[1],
-      line4: reverse[2]
+      city: reverse[2],
+      lat: data.geometry.location.lat,
+      lng: data.geometry.location.lng
     })
   }
 
   const handleAddAddresses = async () => {
-    // const res = await addUserAddress({
-    //   title: 'Mr',
-    //   first_name: 'Saad',
-    //   last_name: "Abid",
-    //   line1: 'Satellite Town',
-    //   line2: '',
-    //   line3: '',
-    //   line4: '',
-    //   line4: "Bwp",
-    //   state: "Punjab",
-    //   postcode: '',
-    //   phone_number: '',
-    //   notes: '',
-    //   is_default_for_shipping: false,
-    //   is_default_for_billing: false,
-    //   country: 'https://drone-express-36671.botics.co/api/countries/US/',
-    //   lat: null,
-    //   lng: null,
-    // })
-    // console.log('Address: ', res);
+    const res = await addUserAddress({
+      title: 'Mr',
+      first_name: 'Saad',
+      last_name: "Abid",
+      line1: address.formatted_address,
+      line4: address.city,
+      state: address.state,
+      is_default_for_shipping: true,
+      is_default_for_billing: true,
+      country: 'https://drone-express-36671.botics.co/api/countries/US/',
+      lat: address.lat,
+      lng: address.lng,
+    })
+    navigation.navigate("shipping", { basketData, address })
   };
 
   useEffect(() => {
@@ -79,7 +82,7 @@ const Billing = ({ navigation, route }) => {
         <View style={styles.btnContainer}>
           <Button
             buttonText={"Proceed"}
-            onPress={() => navigation.navigate("shipping", { basketData, address })}
+            onPress={handleAddAddresses}
           />
         </View>
       </View>
@@ -156,7 +159,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '10%'
   },
   cardContainer: {
-    height: 250,
+    // height: 250,
   },
 })
 

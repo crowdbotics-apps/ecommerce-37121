@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Text, StyleSheet, View, Image, ScrollView } from 'react-native'
 import { Checkbox, RadioButton } from "react-native-paper"
-import { getUserAddress } from "../../apis"
+import { getUserAddress, placeOrder } from "../../apis"
 import Button from "../../components/Button"
 import DetailsCard from "../../components/DetailCard"
 import Input from "../../components/TextInput"
@@ -9,7 +9,6 @@ import Input from "../../components/TextInput"
 const ShippingAddress = ({ navigation, route }) => {
   const [address, setAddress] = useState({});
   const [checked, setChecked] = useState(true);
-  const [userName, setUserName] = useState("");
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
@@ -19,7 +18,7 @@ const ShippingAddress = ({ navigation, route }) => {
     const res = await getUserAddress();
     setAddress(res[0])
   }
-  useEffect(async () => {
+  useEffect(() => {
     handleGetAddress();
     if (route?.params?.basketData) {
       setBasketData(route?.params?.basketData);
@@ -27,10 +26,31 @@ const ShippingAddress = ({ navigation, route }) => {
     if (route?.params?.address) {
       setAddress(route?.params?.address);
       setState(route?.params?.address.state)
-      setCity(route?.params?.address.line4)
+      setCity(route?.params?.address.city)
+      setCountry(route?.params?.address.country)
     }
-    console.log("route?.params: ", route?.params)
   }, [])
+
+  const handlePlaceOrder = async () => {
+    const res = await placeOrder({
+      basket: basketData.url,
+      shipping_charge: {
+        excl_tax: basketData.total_excl_tax
+      },
+      shipping_address: {
+        line1: address.line1,
+        country: 'https://drone-express-36671.botics.co/api/countries/US/'
+      },
+      billing_address: {
+        line1: address.line1,
+        country: 'https://drone-express-36671.botics.co/api/countries/US/'
+      },
+      payment: {
+        method_type: 'stripe'
+      }
+    })
+    navigation.navigate('orderComplete')
+  }
 
   return (
     <View style={styles.container}>
@@ -65,6 +85,7 @@ const ShippingAddress = ({ navigation, route }) => {
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>City</Text>
             <Input
+              editable={false}
               style={styles.input}
               onChangeText={text => setCity(text)}
               value={city}
@@ -77,6 +98,7 @@ const ShippingAddress = ({ navigation, route }) => {
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>Country</Text>
             <Input
+              editable={false}
               style={styles.input}
               onChangeText={text => setCountry(text)}
               value={country}
@@ -91,6 +113,7 @@ const ShippingAddress = ({ navigation, route }) => {
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>State</Text>
             <Input
+              editable={false}
               style={styles.input}
               onChangeText={text => setState(text)}
               value={state}
@@ -106,22 +129,14 @@ const ShippingAddress = ({ navigation, route }) => {
               <Text style={styles.placeholderText}>Confitmation</Text>
               {/* <Image source={require("../assets/checkbox.png")} />
                */}
-              <Checkbox
-                status={checked ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  setChecked(!checked);
-                }}
-                disabled={true}
-              />
+              <Checkbox status={"checked"}/>
             </View>
           </View>
         </View>
         <View style={styles.btnContainer}>
           <Button
-            buttonText={'Continue'}
-            onPress={() => {
-              navigation.navigate('orderComplete');
-            }}
+            buttonText={'Place order'}
+            onPress={handlePlaceOrder}
           >
             <Image
               source={require('../../assets/arrow.png')}
