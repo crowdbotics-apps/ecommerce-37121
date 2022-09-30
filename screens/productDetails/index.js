@@ -24,16 +24,17 @@ const ProductDetails = ({ navigation, route }) => {
     const price = await getPrice(priceUrl);
     setProductPrice(price)
   }
+
+  const cartProducts = async () =>{
+    await productsInCart().then((res) => setProductQuantity(res)).catch((err) => console.log("Error: ", err));
+   }
+   
   useEffect(() => {
     if (route?.params?.product) {
       setProduct(route?.params?.product)
       handlePrice(route?.params?.product?.price);
     };
-    const cartProducts = async () =>{
-      const productQuantity= await productsInCart();
-      setProductQuantity(productQuantity)
-     }
-     cartProducts();
+    cartProducts();
   }, []);
 
   const increment = () => {

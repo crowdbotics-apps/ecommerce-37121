@@ -9,7 +9,7 @@ import { productsInCart } from "../../utils"
 
 const ProductListingScreen = ({ navigation, route }) => {
   const [productsList, setProductsList] = useState([])
-const [productQuantity, setProductQuantity] = useState("0")
+  const [productQuantity, setProductQuantity] = useState("0")
   const handleProducts = async () => {
     const products = await getProductsList();
     var productList = [];
@@ -27,25 +27,25 @@ const [productQuantity, setProductQuantity] = useState("0")
 
 
   useEffect(() => {
-     handleProducts();
-   const cartProducts = async () =>{
-    const productQuantity= await productsInCart();
-    setProductQuantity(productQuantity)
-   }
-   cartProducts();
-  }, [route]);
+    handleProducts();
+    const cartProducts = async () => {
+      await productsInCart().then((res) => setProductQuantity(res)).catch((err) => console.log("Error: ", err));
 
-//   useEffect(() => {
-//     getBasket();
-//  }, []);
+    }
+    cartProducts();
+  }, []);
+
+  //   useEffect(() => {
+  //     getBasket();
+  //  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
-      <TabView tabTitles={["All", "Best Products"]} selected={0} />
-      <CartBox navigation={navigation} quantity={productQuantity}></CartBox>
+        <TabView tabTitles={["All", "Best Products"]} selected={0} />
+        <CartBox navigation={navigation} quantity={productQuantity}></CartBox>
       </View>
-     
+
       <View style={styles.productsContainer}>
         <FlatList
           data={productsList}
@@ -73,8 +73,8 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     marginBottom: 50
   },
-  topContainer:{flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingRight: 30,}
-  
+  topContainer: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingRight: 30, }
+
 });
 
 export default ProductListingScreen;
