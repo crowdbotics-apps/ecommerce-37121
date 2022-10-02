@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
-import { Text, StyleSheet, View, Image, TextInput } from "react-native"
+import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native"
+
 
 const OrderComplete = ({navigation, route}) => {
   const [username, setUsername] = useState("User");
@@ -19,21 +20,15 @@ const OrderComplete = ({navigation, route}) => {
         source={require("../../assets/orderCompleted.png")}
         style={styles.image}
       />
-      <View style={styles.inputContainer}>
-        <Text style={styles.inputText}>Verification Message</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={text => setUsername(text)}
-          placeholder="Click to see"
-          placeholderTextColor="black"
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
+       <Text style={styles.inputText}>Your Order List</Text>
+       <TouchableOpacity style={styles.inputContainer} onPress={()=>{navigation.navigate("ordersList")}}>  
+        <Text style={styles.input}>Click to see</Text>
+     
         <Image
           source={require("../../assets/dropdownIcon.png")}
           style={styles.searchIcon}
         />
-      </View>
+         </TouchableOpacity>
     </View>
   );
 };
@@ -60,9 +55,17 @@ const styles = StyleSheet.create({
     marginVertical: 30
   },
   inputContainer: {
-    flexDirection: "column",
-    justifyContent: "center",
-    marginHorizontal: 20
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginHorizontal: 20,
+    borderWidth: 1,
+    borderColor: "#e6e6e6",
+    borderRadius: 10,
+    padding: 10,
+    paddingLeft: 20,
+    marginVertical: 10,
+    height: 50
   },
   inputText: {
     fontSize: 16,
@@ -70,19 +73,11 @@ const styles = StyleSheet.create({
     color: "#111112"
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#e6e6e6",
-    borderRadius: 10,
-    padding: 10,
-    paddingLeft: 20,
-    marginVertical: 10,
-    width: "100%",
-    height: 50
+   
   },
   searchIcon: {
     position: "absolute",
     right: 30,
-    top: 50
   }
 });
 export default OrderComplete;

@@ -116,6 +116,7 @@ const onFacebookConnect = async (dispatch, navigation) => {
     ]);
     if (!fbResult.isCancelled) {
       const data = await AccessToken.getCurrentAccessToken();
+      // @ts-ignore
       dispatch(facebookLogin({ access_token: data.accessToken }))
         .then(unwrapResult)
         .then(res => {
@@ -141,6 +142,7 @@ const onGoogleConnect = async (dispatch, navigation) => {
     await GoogleSignin.hasPlayServices();
     await GoogleSignin.signIn();
     const tokens = await GoogleSignin.getTokens();
+    // @ts-ignore
     dispatch(googleLogin({ access_token: tokens.accessToken }))
       .then(unwrapResult)
       .then(res => {
@@ -160,10 +162,12 @@ const onAppleConnect = async (dispatch, navigation) => {
   try {
     const signinFunction = Platform.select({
       ios: appleForiOS,
+      // @ts-ignore
       android: appleForAndroid
     });
     const result = await signinFunction();
     dispatch(
+      // @ts-ignore
       appleLogin({ id_token: result.id_token, access_token: result.code })
     )
       .then(unwrapResult)
@@ -187,6 +191,7 @@ export const SignupTab = ({ navigation }) => {
     password: ""
   });
 
+  // @ts-ignore
   const { api } = useSelector(state => state.Login);
   const dispatch = useDispatch();
 
@@ -212,7 +217,9 @@ export const SignupTab = ({ navigation }) => {
         password: "Confirm password and password do not match."
       });
     }
+    // @ts-ignore
     dispatch(signupRequest({ email, password }))
+      // @ts-ignore
       .then(unwrapResult)
       .then(() => {
         Alert.alert(
@@ -298,6 +305,7 @@ export const SignInTab = ({ navigation }) => {
     password: ""
   });
 
+  // @ts-ignore
   const { api } = useSelector(state => state.Login);
   const dispatch = useDispatch();
 
@@ -316,11 +324,13 @@ export const SignInTab = ({ navigation }) => {
       });
     }
 
+    // @ts-ignore
     dispatch(loginRequest({ username: email, password }))
       .then(unwrapResult)
-      .then(res => {
+      .then(async res => {
         if (res.token) {
-          setItem('token', res.token)
+          await setItem('token', res.token)
+          await setItem('userID', res?.user?.id.toString())
           navigation.navigate(HOME_SCREEN_NAME);
         }
       })

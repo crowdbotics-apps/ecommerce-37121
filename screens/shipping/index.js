@@ -85,7 +85,7 @@ const ShippingAddress = ({ navigation, route }) => {
         />
         <View style={styles.mapHeader}>
           <Text style={styles.mapHeaderText}>Map</Text>
-          <Image source={require("../../assets/locationIcon.png")} />
+          <Image source={require("../../assets/locationIcon.png")}  style={styles.mapIcon}/>
         </View>
         <View style={styles.mapImageContainer}>
           <Image
@@ -138,9 +138,7 @@ const ShippingAddress = ({ navigation, route }) => {
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>Confirmation</Text>
             <View style={[styles.input, styles.confirmationBox]}>
-              <Text style={styles.placeholderText}>Confitmation</Text>
-              {/* <Image source={require("../assets/checkbox.png")} />
-               */}
+              <Text style={styles.placeholderText}>Confirmation</Text>
               <Checkbox status={"checked"}/>
             </View>
           </View>
@@ -269,6 +267,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 10
   },
+  mapIcon:{ width: 24, height: 24, resizeMode:"contain"},
   halfInputs: {
     marginHorizontal: 20,
     flexDirection: "row",

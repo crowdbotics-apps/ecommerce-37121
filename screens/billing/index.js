@@ -4,7 +4,8 @@ import Button from '../../components/Button'
 import DetailsCard from '../../components/DetailCard'
 import { modules } from '@modules'
 import { useEffect } from 'react'
-import { addUserAddress } from '../../apis';
+import { addUserAddress, getUser } from '../../apis';
+import { getItem } from '../../utils'
 
 const Billing = ({ navigation, route }) => {
   const [address, setAddress] = useState({
@@ -18,7 +19,7 @@ const Billing = ({ navigation, route }) => {
   const AddressAutoComplete = modules[0].value.navigator //module_index : position of the module in modules folder
   const [cartProducts, setCartProducts] = useState([]);
   const [basketData, setBasketData] = useState({});
-
+  const [userName, setUserName] = useState("");
   const onSelectAddress = data => {
     const arr = data.formatted_address.split(',')
     const reverse = arr.reverse()
@@ -33,10 +34,11 @@ const Billing = ({ navigation, route }) => {
   }
 
   const handleAddAddresses = async () => {
+    const split_name = userName.split(" ");
     const res = await addUserAddress({
       title: 'Mr',
-      first_name: 'Saad',
-      last_name: "Abid",
+      first_name: split_name[0] || "unknown",
+      last_name: split_name[1],
       line1: address.formatted_address,
       line4: address.city,
       state: address.state,
@@ -49,6 +51,10 @@ const Billing = ({ navigation, route }) => {
     navigation.navigate("shipping", { basketData, address })
   };
 
+  const handleGetUser = async () => {
+    await getItem("userID").then(async id => await getUser(id).then((res) => {setUserName(res?.name); console.log("Name: ", res)}).catch((err) => console.log("Error:", err))).catch((err) => console.log("Error:", err))
+  }
+
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
     if (route?.params?.basketData) {
@@ -56,6 +62,7 @@ const Billing = ({ navigation, route }) => {
       setCartProducts(line_details);
       setBasketData(route?.params?.basketData)
     }
+    handleGetUser();
   }, []);
 
   return (

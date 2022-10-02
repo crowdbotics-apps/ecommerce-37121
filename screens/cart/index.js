@@ -11,9 +11,10 @@ const ShoppingCart = ({ navigation }) => {
   const [basketData, setBasketData] = useState({});
 
   const handleGetBasket = async () => {
-    const basket = await getBasket();
-    setCartProducts(basket[0].line_details)
-    setBasketData(basket[0]);
+    await getBasket().then(basket => {
+      setCartProducts(basket[0].line_details)
+      setBasketData(basket[0]);
+    }).catch(err => console.log("ERROR: ", err));
   }
   useEffect(() => {
     handleGetBasket();

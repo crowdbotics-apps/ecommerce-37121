@@ -168,3 +168,70 @@ export const getCountry = async (url) => {
   return data;
 };
 
+
+export const fetchOrderHistory = async () => {
+  const token = await getItem("token")
+  const response = await fetch(`${BASE_URL}/api/orders/`, {
+    method: "GET",
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: "Token " + token
+    },
+   
+  });
+  const data = await response.json();
+
+  return data;
+};
+
+
+export const getUser = async (id) => {
+  const token = await getItem("token")
+  const response = await fetch(`${BASE_URL}/api/v1/profile/${id}/`, {
+    method: "GET",
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: "Token " + token
+    },
+   
+  });
+  const data = await response.json();
+
+  return data;
+};
+
+export const fetchUserCountries = async () => {
+  const token = await getItem("token")
+  const response = await fetch(`${BASE_URL}/api/countries/`, {
+    method: "GET",
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: "Token " + token
+    },
+   
+  });
+  const data = await response.json();
+
+  return data;
+};
+
+export const logoutUser = async () => {
+  const token = await getItem("token")
+  const response = await fetch(`${BASE_URL}/rest-auth/logout/`, {
+    method: "POST",
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: "Token " + token
+    },
+   
+  });
+  const data = await response.json();
+
+  return data;
+};
+
+

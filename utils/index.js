@@ -9,7 +9,7 @@ export const getItem = async key => {
   return await AsyncStorage.getItem(key)
 };
 
-export const productsInCart = async () =>{
+export const cartCount = async () =>{
   const basket = await getBasket();
   const productQuantity = basket[0].line_details.length.toString();
   return productQuantity

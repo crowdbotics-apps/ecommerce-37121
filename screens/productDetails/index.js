@@ -1,17 +1,13 @@
+// @ts-nocheck
 import React, { useState, useEffect } from "react"
 import { Text, View, StyleSheet, Image, Pressable } from "react-native"
-import { Slider } from "react-native-elements"
 import { addToBasket, getPrice } from "../../apis"
 import Button from "../../components/Button"
 import CartBox from "../../components/CartBox"
-import { productsInCart } from "../../utils"
+import { cartCount } from "../../utils"
 
 const ProductDetails = ({ navigation, route }) => {
-  const availability = {
-    color: true ? "#12D790" : "#EA4335",
-    fontSize: 14,
-    fontWeight: "bold"
-  };
+  
   const [product, setProduct] = useState({});
   const [productPrice, setProductPrice] = useState(1);
   const [quantity, setQuantity] = useState(1);
@@ -21,12 +17,12 @@ const ProductDetails = ({ navigation, route }) => {
   )
 
   const handlePrice = async priceUrl => {
-    const price = await getPrice(priceUrl);
+    const price = await getPrice(priceUrl).catch((error) =>console.log("error: ", error));
     setProductPrice(price)
   }
 
   const cartProducts = async () =>{
-    await productsInCart().then((res) => setProductQuantity(res)).catch((err) => console.log("Error: ", err));
+    await cartCount().then((res) => setProductQuantity(res)).catch((err) => console.log("Error: ", err));
    }
    
   useEffect(() => {
@@ -49,14 +45,14 @@ const ProductDetails = ({ navigation, route }) => {
     }
   };
 
-  const handleConfirmation = async product => {
+  const handleConfirmation = async id => {
     try {
-      const res = await addToBasket({
+      await addToBasket({
         quantity,
-        url: product.id,
+        url: id,
         partner_id: 4,
-      })
-      navigation.navigate("cart")
+      }).then((res) => navigation.navigate("cart")).catch((error) =>console.log("error: ", error))
+      
     } catch (error) {
       console.log("ERROR: ", error)
     }
@@ -79,7 +75,7 @@ const ProductDetails = ({ navigation, route }) => {
         <Text style={styles.description}>{description}</Text>
         <View style={styles.availabilityContainer}>
           <Text style={styles.statusText}>Availability Status: </Text>
-          <Text style={availability}>
+          <Text style={[styles.availability,{color: product?.availability_status?.is_available_to_buy ? "#12D790" : "#EA4335",}]}>
             {product?.availability_status?.is_available_to_buy
               ? 'Available'
               : "Not available"}
@@ -118,7 +114,7 @@ const ProductDetails = ({ navigation, route }) => {
         <Button
           buttonText="Add to cart"
           style={styles.button}
-          onPress={() => handleConfirmation(product)}
+          onPress={() => handleConfirmation(product?.id)}
         />
       </View>
     </View>
@@ -251,7 +247,11 @@ const styles = StyleSheet.create({
   statusText: { fontSize: 12, fontWeight: "bold", color: "#626468" },
   cartContainer:{ flexDirection: "row",
   justifyContent: "space-between",
-  alignItems: "center",}
+  alignItems: "center",},
+  availability: {
+    fontSize: 14,
+    fontWeight: "bold"
+  }
 });
 
 export default ProductDetails;
