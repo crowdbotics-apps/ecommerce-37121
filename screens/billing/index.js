@@ -4,7 +4,7 @@ import Button from '../../components/Button'
 import DetailsCard from '../../components/DetailCard'
 import { modules } from '@modules'
 import { useEffect } from 'react'
-import { addUserAddress, getUser } from '../../apis';
+import { addUserAddress, fetchUserCountries, getUser } from '../../apis';
 import { getItem } from '../../utils'
 import Loader from '../../components/Loader'
 
@@ -22,6 +22,7 @@ const Billing = ({ navigation, route }) => {
   const [basketData, setBasketData] = useState({});
   const [userName, setUserName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [userCountry, setUserCountry] = useState("");
   const onSelectAddress = data => {
     const arr = data.formatted_address.split(',')
     const reverse = arr.reverse()
@@ -40,14 +41,14 @@ const Billing = ({ navigation, route }) => {
     const split_name = userName.split(" ");
     const res = await addUserAddress({
       title: 'Mr',
-      first_name: split_name[0] || "unknown",
+      first_name: split_name[0],
       last_name: split_name[1],
       line1: address.formatted_address,
       line4: address.city,
       state: address.state,
       is_default_for_shipping: true,
       is_default_for_billing: true,
-      country: 'https://drone-express-36671.botics.co/api/countries/US/',
+      country: userCountry,
       lat: address.lat,
       lng: address.lng,
     })
@@ -58,6 +59,9 @@ const Billing = ({ navigation, route }) => {
   const handleGetUser = async () => {
     await getItem("userID").then(async id => await getUser(id).then((res) => {setUserName(res?.name)}).catch((err) => console.log("Error:", err))).catch((err) => console.log("Error:", err))
   }
+  const handleGetCountry = async () => {
+   await fetchUserCountries().then((res) => {setUserCountry(res[0]?.url)}).catch((err) => console.log("Error:", err))
+  }
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
@@ -67,6 +71,7 @@ const Billing = ({ navigation, route }) => {
       setBasketData(route?.params?.basketData)
     }
     handleGetUser();
+    handleGetCountry();
   }, []);
 
   return (

@@ -1,14 +1,14 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import { Text, View, StyleSheet, Image, Pressable } from "react-native"
 import { addToBasket, getPrice } from "../../apis"
 import Button from "../../components/Button"
 import CartBox from "../../components/CartBox"
 import Loader from "../../components/Loader"
 import { cartCount } from "../../utils"
-
+import { GlobalOptionsContext } from '@options';
 const ProductDetails = ({ navigation, route }) => {
-  
+  const gOptions = useContext(GlobalOptionsContext)
   const [product, setProduct] = useState({});
   const [productPrice, setProductPrice] = useState(1);
   const [quantity, setQuantity] = useState(1);
@@ -50,7 +50,7 @@ const ProductDetails = ({ navigation, route }) => {
       await addToBasket({
         quantity,
         url: id,
-        partner_id: 1,
+        partner_id: gOptions.partner_id,
       }).then((res) => {setIsLoading(false);navigation.navigate("cart")}).catch((error) => {console.log("error: ", error); setIsLoading(false)})
       
     } catch (error) {
