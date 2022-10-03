@@ -21,7 +21,7 @@ const OrderComplete = ({navigation, route}) => {
         style={styles.image}
       />
        <Text style={styles.inputText}>Your Order List</Text>
-       <TouchableOpacity style={styles.inputContainer} onPress={()=>{navigation.navigate("ordersList")}}>  
+       <TouchableOpacity style={styles.inputContainer} onPress={()=>{navigation.replace('ordersList')}}>  
         <Text style={styles.input}>Click to see</Text>
      
         <Image

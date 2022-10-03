@@ -4,7 +4,7 @@ import Button from '../../components/Button'
 import DetailsCard from '../../components/DetailCard'
 import { modules } from '@modules'
 import { useEffect } from 'react'
-import { addUserAddress, fetchUserCountries, getUser } from '../../apis';
+import { addUserAddress, getUser } from '../../apis';
 import { getItem } from '../../utils'
 import Loader from '../../components/Loader'
 import { GlobalOptionsContext } from '@options';
@@ -24,8 +24,10 @@ const Billing = ({ navigation, route }) => {
   const [basketData, setBasketData] = useState({});
   const [userName, setUserName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [userCountry, setUserCountry] = useState("");
+  const[addressError, setAddressError] = useState("");
+
   const onSelectAddress = data => {
+    setAddressError("")
     const arr = data.formatted_address.split(',')
     const reverse = arr.reverse()
     setAddress({
@@ -39,23 +41,31 @@ const Billing = ({ navigation, route }) => {
   }
 
   const handleAddAddresses = async () => {
-    setIsLoading(true)
-    const split_name = userName.split(" ");
-    const res = await addUserAddress({
-      title: 'Mr',
-      first_name: split_name[0],
-      last_name: split_name[1],
-      line1: address.formatted_address,
-      line4: address.city,
-      state: address.state,
-      is_default_for_shipping: true,
-      is_default_for_billing: true,
-      country: gOptions.oscar_countries,
-      lat: address.lat,
-      lng: address.lng,
-    })
-    setIsLoading(false)
-    navigation.navigate("shipping", { basketData, address })
+    if(address.city && address.state){
+      setIsLoading(true)
+      const split_name = userName.split(" ");
+      await addUserAddress({
+        title: 'Mr',
+        first_name: split_name[0],
+        last_name: split_name[1],
+        line1: address.formatted_address,
+        line4: address.city,
+        state: address.state,
+        is_default_for_shipping: true,
+        is_default_for_billing: true,
+        country: gOptions.oscar_countries,
+        lat: address.lat,
+        lng: address.lng,
+      }).then((res) =>{ 
+        setIsLoading(false)
+        navigation.navigate("shipping", { basketData, address })
+      }).catch((err) =>{
+        setIsLoading(false);
+        console.log("Error: ", err)
+      })
+    }else{
+      setAddressError("No address is provided!")
+    }   
   };
 
   const handleGetUser = async () => {
@@ -85,6 +95,7 @@ const Billing = ({ navigation, route }) => {
             <AddressAutoComplete
               onAddressSelect={(data, address) => onSelectAddress(address)}
             />
+            <Text style={styles.errorStyle}>{addressError}</Text>
           </View>
         </View>
         <View style={styles.cardContainer}>
@@ -177,6 +188,10 @@ const styles = StyleSheet.create({
   cardContainer: {
     // height: 250,
   },
+  errorStyle:{
+    color: "red",
+    marginLeft: 20, marginTop: 5
+  }
 })
 
 export default Billing

@@ -22,7 +22,7 @@ const TabView = ({ tabTitles, selected }) => {
 
 const tabViewStyles = StyleSheet.create({
   paletteContainer: {
-    width: "70%",
+    width: "50%",
     height: 48,
     backgroundColor: "#F1F1F1",
     flexDirection: "row",

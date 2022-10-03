@@ -33,7 +33,6 @@ const OrderHistoryModal = ({ navigation }) => {
       <Pressable onPress={() => handleViewOrder(item)}>
         <View style={styles.cardContainer}>
           <View style={styles.infoContainer}>
-            <Image source={{ uri: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZHVjdHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" }} style={styles.productImage} />
             <View>
               <Text style={styles.mainText}>Order# {item.number}</Text>
               <Text style={styles.subText}>
@@ -64,7 +63,7 @@ const OrderHistoryModal = ({ navigation }) => {
               <Pressable onPress={() => navigation.navigate("products")}>
               <Image source={require("../../assets/home.png")} style={styles.homeIcon} />
               </Pressable>
-            </View>
+      </View>
         <FlatList
           data={orderHistory}
           showsVerticalScrollIndicator={false}
@@ -193,6 +192,7 @@ const styles = StyleSheet.create({
     color: "#7C7C7C",
     fontWeight: "bold"
   },
+  noProduct:{fontSize: 18, textAlign: 'center', fontWeight: 'bold'}
 });
 
 export default OrderHistoryModal;

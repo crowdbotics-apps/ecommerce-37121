@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, LogBox, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, FlatList, LogBox, Image, TouchableOpacity, Text } from 'react-native';
 import { getProduct, getProductsList, logoutUser, productAvailability } from '../../apis';
 import CartBox from '../../components/CartBox';
 import Product from '../../components/Product';
@@ -60,6 +60,7 @@ const ProductListingScreen = ({ navigation, route }) => {
 
 	return (
 		<View style={styles.container}>
+			
 			{isLoading ? (
 				<Loader />
 			) : (
@@ -67,6 +68,12 @@ const ProductListingScreen = ({ navigation, route }) => {
 					<View style={styles.topContainer}>
 						<TabView tabTitles={[ 'All Products' ]} selected={0} />
 						<CartBox navigation={navigation} quantity={productQuantity} />
+						<TouchableOpacity onPress={() =>navigation.navigate("ordersList")}>
+								<Image
+									source={require("../../assets/orderIcon.png")}
+									style={styles.orderImage}
+								/>
+							</TouchableOpacity>
 						<View>
 							<TouchableOpacity onPress={handleLogout}>
 								<Image
@@ -91,6 +98,7 @@ const ProductListingScreen = ({ navigation, route }) => {
 					</View>
 				</View>
 			)}
+			{productsList.length === 0 && !isLoading && <Text style={styles.noProduct}>No Products Found</Text>}
 		</View>
 	);
 };
@@ -105,7 +113,9 @@ const styles = StyleSheet.create({
 		marginBottom: 50
 	},
 	topContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingRight: 20 },
-	productImage: { height: 20, width: 20, resizeMode: 'contain' }
+	productImage: { height: 20, width: 20, resizeMode: 'contain' },
+	orderImage: { height: 24, width: 24, resizeMode: 'contain' },
+	noProduct:{fontSize: 18, textAlign: 'center', fontWeight: 'bold'}
 });
 
 export default ProductListingScreen;
