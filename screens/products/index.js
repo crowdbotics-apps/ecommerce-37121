@@ -6,17 +6,19 @@ import CartBox from '../../components/CartBox';
 import Product from '../../components/Product';
 import TabView from '../../components/TabView';
 import { cartCount } from '../../utils';
-
+import Loader from '../../components/Loader';
 const ProductListingScreen = ({ navigation, route }) => {
-	const [ productsList, setProductsList ] = useState([]);
-	const [ productQuantity, setProductQuantity ] = useState('0');
+	const [productsList, setProductsList] = useState([]);
+	const [productQuantity, setProductQuantity] = useState('0');
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleProducts = async () => {
-		const products = await getProductsList().catch((error) => console.log('error: ', error));
+		setIsLoading(true)
+		const products = await getProductsList().catch((error) => { console.log('error: ', error); setIsLoading(false) });
 		var productList = [];
 		let i = 0;
 		while (i < products.length) {
-			const product = await getProduct(products[i].url).catch((error) => console.log('error: ', error));
+			const product = await getProduct(products[i].url).catch((error) => { console.log('error: ', error); setIsLoading(false) });
 			const availability = await productAvailability(product.availability).catch((error) =>
 				console.log('error: ', error)
 			);
@@ -25,6 +27,7 @@ const ProductListingScreen = ({ navigation, route }) => {
 			i += 1;
 		}
 		setProductsList(productList);
+		setIsLoading(false)
 	};
 
 	useEffect(() => {
@@ -37,43 +40,48 @@ const ProductListingScreen = ({ navigation, route }) => {
 
 	const handleLogout = async () => {
 		await logoutUser()
-			.then(async(res) => {
-        await AsyncStorage.removeItem('token');
-        await AsyncStorage.removeItem('userID');
+			.then(async (res) => {
+				await AsyncStorage.removeItem('token');
+				await AsyncStorage.removeItem('userID');
 				navigation.navigate('login');
 			})
 			.catch((err) => console.log('Error: ', err));
 	};
 
-	LogBox.ignoreLogs([ 'Require cycle: node_modules/' ]);
+	LogBox.ignoreLogs(['Require cycle: node_modules/']);
 
 	return (
-		<View style={styles.container}>
-			<View style={styles.topContainer}>
-				<TabView tabTitles={[ 'All', 'Best Products' ]} selected={0} />
-				<CartBox navigation={navigation} quantity={productQuantity} />
-				<View>
-					<TouchableOpacity onPress={handleLogout}>
-						<Image
-							source={{ uri: 'https://www.iconsdb.com/icons/preview/gray/logout-xxl.png' }}
-							style={styles.productImage}
-						/>
-					</TouchableOpacity>
-				</View>
-			</View>
 
-			<View style={styles.productsContainer}>
-				<FlatList
-					data={productsList}
-					numColumns={2}
-					keyExtractor={(item) => item.id.toString()}
-					renderItem={({ item }) => <Product product={item} navigation={navigation} />}
-					columnWrapperStyle={{
-						justifyContent: 'space-around'
-					}}
-					showsVerticalScrollIndicator={false}
-				/>
-			</View>
+		<View style={styles.container}>
+			{isLoading ? <Loader></Loader> :
+				<View>
+					<View style={styles.topContainer}>
+						<TabView tabTitles={['All', 'Best Products']} selected={0} />
+						<CartBox navigation={navigation} quantity={productQuantity} />
+						<View>
+							<TouchableOpacity onPress={handleLogout}>
+								<Image
+									source={{ uri: 'https://www.iconsdb.com/icons/preview/gray/logout-xxl.png' }}
+									style={styles.productImage}
+								/>
+							</TouchableOpacity>
+						</View>
+					</View>
+
+					<View style={styles.productsContainer}>
+						<FlatList
+							data={productsList}
+							numColumns={2}
+							keyExtractor={(item) => item.id.toString()}
+							renderItem={({ item }) => <Product product={item} navigation={navigation} />}
+							columnWrapperStyle={{
+								justifyContent: 'space-around'
+							}}
+							showsVerticalScrollIndicator={false}
+						/>
+					</View>
+				</View>}
+
 		</View>
 	);
 };

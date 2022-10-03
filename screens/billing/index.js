@@ -6,6 +6,7 @@ import { modules } from '@modules'
 import { useEffect } from 'react'
 import { addUserAddress, getUser } from '../../apis';
 import { getItem } from '../../utils'
+import Loader from '../../components/Loader'
 
 const Billing = ({ navigation, route }) => {
   const [address, setAddress] = useState({
@@ -20,6 +21,7 @@ const Billing = ({ navigation, route }) => {
   const [cartProducts, setCartProducts] = useState([]);
   const [basketData, setBasketData] = useState({});
   const [userName, setUserName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const onSelectAddress = data => {
     const arr = data.formatted_address.split(',')
     const reverse = arr.reverse()
@@ -34,6 +36,7 @@ const Billing = ({ navigation, route }) => {
   }
 
   const handleAddAddresses = async () => {
+    setIsLoading(true)
     const split_name = userName.split(" ");
     const res = await addUserAddress({
       title: 'Mr',
@@ -48,6 +51,7 @@ const Billing = ({ navigation, route }) => {
       lat: address.lat,
       lng: address.lng,
     })
+    setIsLoading(false)
     navigation.navigate("shipping", { basketData, address })
   };
 
@@ -67,6 +71,7 @@ const Billing = ({ navigation, route }) => {
 
   return (
     <View style={{ backgroundColor: '#FFF', width: '100%', height: "100%" }}>
+       {isLoading && <Loader></Loader> }
       <DetailsCard basketData={basketData} />
       <View style={styles.container}>
         <View style={styles.deliveryDetailsContainer}>

@@ -4,6 +4,7 @@ import { Text, View, StyleSheet, Image, Pressable } from "react-native"
 import { addToBasket, getPrice } from "../../apis"
 import Button from "../../components/Button"
 import CartBox from "../../components/CartBox"
+import Loader from "../../components/Loader"
 import { cartCount } from "../../utils"
 
 const ProductDetails = ({ navigation, route }) => {
@@ -11,10 +12,8 @@ const ProductDetails = ({ navigation, route }) => {
   const [product, setProduct] = useState({});
   const [productPrice, setProductPrice] = useState(1);
   const [quantity, setQuantity] = useState(1);
-  const [productQuantity, setProductQuantity] = useState("0")
-  const [description, setDescription] = useState(
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec blandit elementum sapien ac feugiat. Donec tempor dapibus turpis, ac fermentum nulla tempus eu.'
-  )
+  const [productQuantity, setProductQuantity] = useState("0");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePrice = async priceUrl => {
     const price = await getPrice(priceUrl).catch((error) =>console.log("error: ", error));
@@ -46,20 +45,23 @@ const ProductDetails = ({ navigation, route }) => {
   };
 
   const handleConfirmation = async id => {
+    setIsLoading(true)
     try {
       await addToBasket({
         quantity,
         url: id,
         partner_id: 4,
-      }).then((res) => navigation.navigate("cart")).catch((error) =>console.log("error: ", error))
+      }).then((res) => {setIsLoading(false);navigation.navigate("cart")}).catch((error) => {console.log("error: ", error); setIsLoading(false)})
       
     } catch (error) {
       console.log("ERROR: ", error)
+      setIsLoading(false)
     }
   };
 
   return (
     <View style={styles.container}>
+      {isLoading && <Loader></Loader> }
       <View style={styles.imageContainer}>
         <Image
           source={{ uri: product?.images ? product?.images[0].original : "jt" }}
@@ -72,7 +74,7 @@ const ProductDetails = ({ navigation, route }) => {
         <Text style={styles.title}>{product?.title}</Text>
         <CartBox navigation={navigation} quantity={productQuantity}></CartBox>
         </View>
-        <Text style={styles.description}>{description}</Text>
+        <Text style={styles.description}>{product?.description}</Text>
         <View style={styles.availabilityContainer}>
           <Text style={styles.statusText}>Availability Status: </Text>
           <Text style={[styles.availability,{color: product?.availability_status?.is_available_to_buy ? "#12D790" : "#EA4335",}]}>

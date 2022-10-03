@@ -4,6 +4,7 @@ import { Checkbox, RadioButton } from "react-native-paper"
 import { getCountry, getUserAddress, startCheckout } from "../../apis"
 import Button from "../../components/Button"
 import DetailsCard from "../../components/DetailCard"
+import Loader from "../../components/Loader"
 import Input from "../../components/TextInput"
 
 const ShippingAddress = ({ navigation, route }) => {
@@ -12,6 +13,7 @@ const ShippingAddress = ({ navigation, route }) => {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [shippingCharge, setShippingCharge] = useState({
     currency: "USD",
     excl_tax: "0.0",
@@ -27,18 +29,19 @@ const ShippingAddress = ({ navigation, route }) => {
     const response = await getCountry(res[0].country);
     setCountry(response.name)
   }
-  
+
   // @ts-ignore
   useEffect(async () => {
     handleGetAddress();
     if (route?.params?.basketData) {
       const { basketData } = route?.params;
       setBasketDataObj(basketData);
-      setShippingCharge({...shippingCharge, currency: basketData.currency, excl_tax: basketData.delivery_fee, tax: basketData.total_tax})
+      setShippingCharge({ ...shippingCharge, currency: basketData.currency, excl_tax: basketData.delivery_fee, tax: basketData.total_tax })
     }
   }, [])
 
   const handleCheckout = async () => {
+    setIsLoading(true);
     const obj = {
       basket: basketDataObj?.url,
       guest_email: "foo@example.com",
@@ -54,8 +57,7 @@ const ShippingAddress = ({ navigation, route }) => {
       }
     }
     try {
-      const checkout = await startCheckout(obj);
-      navigation.navigate('orderComplete', {userInfo: checkout?.shipping_address});
+      await startCheckout(obj).then((res) => { setIsLoading(false); navigation.navigate('orderComplete', { userInfo: res?.shipping_address }) });
 
     } catch (error) {
       console.log("Error: ", error)
@@ -66,6 +68,7 @@ const ShippingAddress = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
+      {isLoading && <Loader></Loader>}
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.inputs}>
           <View style={styles.inputContainer}>
@@ -85,7 +88,7 @@ const ShippingAddress = ({ navigation, route }) => {
         />
         <View style={styles.mapHeader}>
           <Text style={styles.mapHeaderText}>Map</Text>
-          <Image source={require("../../assets/locationIcon.png")}  style={styles.mapIcon}/>
+          <Image source={require("../../assets/locationIcon.png")} style={styles.mapIcon} />
         </View>
         <View style={styles.mapImageContainer}>
           <Image
@@ -139,7 +142,7 @@ const ShippingAddress = ({ navigation, route }) => {
             <Text style={styles.inputText}>Confirmation</Text>
             <View style={[styles.input, styles.confirmationBox]}>
               <Text style={styles.placeholderText}>Confirmation</Text>
-              <Checkbox status={"checked"}/>
+              <Checkbox status={"checked"} />
             </View>
           </View>
         </View>
@@ -267,7 +270,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 10
   },
-  mapIcon:{ width: 24, height: 24, resizeMode:"contain"},
+  mapIcon: { width: 24, height: 24, resizeMode: "contain" },
   halfInputs: {
     marginHorizontal: 20,
     flexDirection: "row",

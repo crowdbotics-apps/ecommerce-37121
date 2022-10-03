@@ -11,7 +11,7 @@ const Product = ({ product, navigation }) => {
           }}
         >
           <Image
-            source={{ uri: product.images[0].original }}
+            source={{ uri: product?.images[0]?.original }}
             style={productStyles.productImage}
           />
         </TouchableOpacity>

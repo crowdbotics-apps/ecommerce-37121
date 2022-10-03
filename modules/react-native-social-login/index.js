@@ -23,6 +23,7 @@ import { SignInTab, SignupTab } from "./screens/loginsignup"
 import PasswordReset from "./screens/reset"
 import { getItem } from "../../utils"
 
+
 const LoginTabBar = ({ navigation, state, descriptors }) => {
   const currentTab = state.routes[state.index];
   return (
@@ -136,10 +137,16 @@ const LoginScreen = () => {
 const Stack = createStackNavigator();
 
 const LoginSignup = ({ navigation }) => {
-  useEffect(() => {
-    getItem("token").then(() => {
+
+  const checkAuth = async () =>{
+  const token = await getItem("token")
+     if(token){
       navigation.navigate('products')
-    })
+     }
+  }
+  
+  useEffect(() => {
+    checkAuth();
   }, [])
 
   return (

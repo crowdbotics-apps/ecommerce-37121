@@ -4,17 +4,21 @@ import { Text, Image, StyleSheet, View, ScrollView } from "react-native"
 import { getBasket, removeFromBasket } from "../../apis"
 import Button from "../../components/Button"
 import DetailsCard from "../../components/DetailCard"
+import Loader from "../../components/Loader"
 import OrderCard from "../../components/OrderCard"
 
 const ShoppingCart = ({ navigation }) => {
   const [cartProducts, setCartProducts] = useState([])
   const [basketData, setBasketData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleGetBasket = async () => {
+    setIsLoading(true)
     await getBasket().then(basket => {
       setCartProducts(basket[0].line_details)
       setBasketData(basket[0]);
-    }).catch(err => console.log("ERROR: ", err));
+      setIsLoading(false)
+    }).catch(err => {console.log("ERROR: ", err); setIsLoading(false)});
   }
   useEffect(() => {
     handleGetBasket();
@@ -37,15 +41,10 @@ const ShoppingCart = ({ navigation }) => {
       showsVerticalScrollIndicator={false}
       style={{ backgroundColor: '#FFF' }}
     >
-      <DetailsCard basketData={basketData} />
+       {isLoading ? <Loader></Loader> : <DetailsCard basketData={basketData} />}
       <View style={styles.container}>
         <View style={styles.cardContent}>
           <Text style={styles.chartText}>Cart</Text>
-          {/* <Image
-            resizeMode="contain"
-            style={styles.cartImage}
-            source={require('../../assets/cart.png')}
-          /> */}
         </View>
         {cartProducts &&
           cartProducts.map((product, index) => (

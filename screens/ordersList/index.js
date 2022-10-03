@@ -59,7 +59,12 @@ const OrderHistoryModal = ({ navigation }) => {
 
     <View style={styles.modalView}>
       <View>
-        
+      <View style={styles.flexRow}>
+              <Text style={styles.fnt16}>Orders List</Text>
+              <Pressable onPress={() => navigation.navigate("products")}>
+              <Image source={require("../../assets/home.png")} style={styles.homeIcon} />
+              </Pressable>
+            </View>
         <FlatList
           data={orderHistory}
           showsVerticalScrollIndicator={false}
@@ -142,6 +147,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginRight: 20
   },
+  homeIcon: {
+    width: 24,
+    height: 24,
+  resizeMode: "contain"
+  },
   mainText: {
     fontSize: 16,
     color: "#000",
@@ -171,6 +181,17 @@ const styles = StyleSheet.create({
   btnText: {
     color: "#fff",
     fontSize: 13
+  },
+  flexRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20
+  },
+  fnt16: {
+    fontSize: 16,
+    color: "#7C7C7C",
+    fontWeight: "bold"
   },
 });
 
