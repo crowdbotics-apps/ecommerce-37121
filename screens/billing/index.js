@@ -43,7 +43,7 @@ const Billing = ({ navigation, route }) => {
   const handleAddAddresses = async () => {
     if(address.city && address.state){
       setIsLoading(true)
-      const split_name = userName.split(" ");
+      const split_name = userName?.split(" ");
       await addUserAddress({
         title: 'Mr',
         first_name: split_name[0],
@@ -69,7 +69,11 @@ const Billing = ({ navigation, route }) => {
   };
 
   const handleGetUser = async () => {
-    await getItem("userID").then(async id => await getUser(id).then((res) => {setUserName(res?.name)}).catch((err) => console.log("Error:", err))).catch((err) => console.log("Error:", err))
+    const userID = await getItem("userID");
+    if(userID){
+      await getUser(userID).then((res) => {setUserName(res?.name)}).catch((err) => console.log("Error:", err))
+    }
+   
   }
  
 

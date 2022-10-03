@@ -11,6 +11,6 @@ export const getItem = async key => {
 
 export const cartCount = async () =>{
   const basket = await getBasket();
-  const productQuantity = basket[0].line_details.length.toString();
+  const productQuantity = basket[0]?.line_details.length.toString();
   return productQuantity
   }

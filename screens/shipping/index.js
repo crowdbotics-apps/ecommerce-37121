@@ -23,11 +23,16 @@ const ShippingAddress = ({ navigation, route }) => {
   const [basketDataObj, setBasketDataObj] = useState({})
 
   const handleGetAddress = async () => {
-    const res = await getUserAddress();
-    setAddress(res[0]);
-    setShippingAddress(res[0]);
-    const response = await getCountry(res[0].country);
-    setCountry(response.name)
+    await getUserAddress().then(async (res) => {
+      const resultLength = res.length;
+      setAddress(res[resultLength - 1]);
+      setShippingAddress(res[resultLength - 1]);
+      await getCountry(res[resultLength - 1]?.country).then((response) => {
+        setCountry(response.name)
+      }).catch((err) => console.log("Error: ", err))
+    }).catch((err) => console.log("Error: ", err));
+
+
   }
 
   // @ts-ignore
@@ -57,15 +62,14 @@ const ShippingAddress = ({ navigation, route }) => {
       }
     }
     try {
-      await startCheckout(obj).then((res) => { setIsLoading(false); navigation.navigate('orderComplete', { userInfo: res?.shipping_address }) });
-
+      await startCheckout(obj).then((res) => {
+        setIsLoading(false);
+        navigation.navigate('orderComplete', { userInfo: res?.shipping_address })
+      }).catch((error) => console.log("Error: ", error))
     } catch (error) {
       console.log("Error: ", error)
     }
-
-
   }
-
   return (
     <View style={styles.container}>
       {isLoading && <Loader></Loader>}
