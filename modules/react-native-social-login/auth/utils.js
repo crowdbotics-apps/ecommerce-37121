@@ -1,6 +1,6 @@
 // Please, update the values below as instructed in the README.md file.
-export const GOOGLE_WEB_CLIENT_ID ='610264562121-26ev852ag9eiboo6m780almi6e5eaujk.apps.googleusercontent.com'
-export const GOOGLE_IOS_CLIENT_ID = "610264562121-ca1ijpjc11863eh79t1qq03kgiuahghf.apps.googleusercontent.com"
+export const GOOGLE_WEB_CLIENT_ID ='xxxxxxx.apps.googleusercontent.com'
+export const GOOGLE_IOS_CLIENT_ID = "xxxxxxx.apps.googleusercontent.com"
 export const APPLE_SERVICE_ID = "com.crowdbotics.ecommerce_37121"
 export const APPLE_REDIRECT_CALLBACK =
   "https://ecommerce-37121.botics.co/accounts/apple/login/callback/"

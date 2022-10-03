@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useEffect } from "react"
-import { Text, Image, StyleSheet, View, ScrollView } from "react-native"
+import { Text, Image, StyleSheet, View, ScrollView, Alert } from "react-native"
 import { getBasket, removeFromBasket } from "../../apis"
 import Button from "../../components/Button"
 import DetailsCard from "../../components/DetailCard"
@@ -15,7 +15,7 @@ const ShoppingCart = ({ navigation }) => {
   const handleGetBasket = async () => {
     setIsLoading(true)
     await getBasket().then(basket => {
-      setCartProducts(basket[0].line_details)
+      setCartProducts(basket[0]?.line_details)
       setBasketData(basket[0]);
       setIsLoading(false)
     }).catch(err => {console.log("ERROR: ", err); setIsLoading(false)});
@@ -36,6 +36,14 @@ const ShoppingCart = ({ navigation }) => {
     }
   }
 
+  const handleCheckout = () =>{
+    if(cartProducts.length !== 0){
+      navigation.navigate('billing', { basketData });
+    }else{
+      Alert.alert("No product in Basket!", "Please add at least one product in basket before checkout")
+    }
+    
+  }
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -54,13 +62,12 @@ const ShoppingCart = ({ navigation }) => {
               key={index}
             />
           ))}
+         
 
         <View style={styles.btnContainer}>
           <Button
             buttonText="Checkout"
-            onPress={() => {
-              navigation.navigate('billing', { basketData });
-            }}
+            onPress={handleCheckout}
           />
         </View>
       </View>
@@ -139,7 +146,8 @@ const styles = StyleSheet.create({
   btnContainer: {
     marginVertical: 20,
     paddingHorizontal: "10%"
-  }
+  },
+  noProduct:{fontSize: 18, textAlign: 'center', fontWeight: 'bold'}
 });
 
 export default ShoppingCart;

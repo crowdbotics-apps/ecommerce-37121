@@ -221,11 +221,17 @@ export const SignupTab = ({ navigation }) => {
     dispatch(signupRequest({ email, password }))
       // @ts-ignore
       .then(unwrapResult)
-      .then(() => {
-        Alert.alert(
-          "Signup Success",
-          "Registration Successful. A confirmation will be sent to your e-mail address."
-        );
+      .then(async (res) => {
+        await setItem('token', res.token)
+        await setItem('userID', res?.user?.id.toString())
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        navigation.navigate(HOME_SCREEN_NAME);
+        // Alert.alert(
+        //   "Signup Success",
+        //   "Registration Successful. A confirmation will be sent to your e-mail address."
+        // );
       })
       .catch(err => console.log(err.message));
   };
@@ -331,6 +337,8 @@ export const SignInTab = ({ navigation }) => {
         if (res.token) {
           await setItem('token', res.token)
           await setItem('userID', res?.user?.id.toString())
+          setEmail("");
+          setPassword("")
           navigation.navigate(HOME_SCREEN_NAME);
         }
       })

@@ -18,7 +18,7 @@ const OrderDetails = ({ navigation, route }) => {
       const { item } = route.params;
       setOrder(item);
       setOrderLines(item?.lines)
-      const dateTime = item.date_placed.split("T")
+      const dateTime = item?.date_placed.split("T")
       setOrderDate(dateTime[0])
       const splitTime = dateTime[1].split(":");
       setOrderTime(splitTime[0] + ":" + splitTime[1])

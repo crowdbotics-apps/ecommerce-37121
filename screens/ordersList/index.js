@@ -27,14 +27,14 @@ const OrderHistoryModal = ({ navigation }) => {
 
   const renderItem = ({ item }) => {
     if (!item) return;
-    const dateTime = item.date_placed.split("T")
+    const dateTime = item?.date_placed.split("T")
     const splitTime = dateTime[1].split(":");
     return (
       <Pressable onPress={() => handleViewOrder(item)}>
         <View style={styles.cardContainer}>
           <View style={styles.infoContainer}>
             <View>
-              <Text style={styles.mainText}>Order# {item.number}</Text>
+              <Text style={styles.mainText}>Order# {item?.number}</Text>
               <Text style={styles.subText}>
                 {dateTime[0]} | {splitTime[0]}:{splitTime[1]}
               </Text>
@@ -43,7 +43,7 @@ const OrderHistoryModal = ({ navigation }) => {
           </View>
           <View style={styles.detailsContainer}>
             <Text style={styles.mainText}>
-              {item?.lines?.length.toString()} Item | ${item.total_incl_tax}
+              {item?.lines?.length.toString()} Item | ${item?.total_incl_tax}
             </Text>
             <Pressable style={[styles.button, { backgroundColor: item?.status === "Completed" ? "#63b530" : item?.status === "Pending" ? "#ead00e" : "#f21313" }]}>
               <Text style={styles.btnText}>{item?.status}</Text>
@@ -64,6 +64,7 @@ const OrderHistoryModal = ({ navigation }) => {
               <Image source={require("../../assets/home.png")} style={styles.homeIcon} />
               </Pressable>
       </View>
+      {orderHistory.length === 0 && !refresh && <Text style={styles.noProduct}>No Orders Found</Text>}
         <FlatList
           data={orderHistory}
           showsVerticalScrollIndicator={false}
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
     color: "#7C7C7C",
     fontWeight: "bold"
   },
-  noProduct:{fontSize: 18, textAlign: 'center', fontWeight: 'bold'}
+  noProduct:{fontSize: 18, textAlign: 'center', fontWeight: 'bold', marginTop: "20%"}
 });
 
 export default OrderHistoryModal;

@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">ecommerce-37121</string>
-    <string name="facebook_app_id">439720751444012</string>
-    <string name="server_client_id">610264562121-77s0dp84248ao7g3hincqen4qgmd2g12.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">facebook app_id here</string>
 </resources>
