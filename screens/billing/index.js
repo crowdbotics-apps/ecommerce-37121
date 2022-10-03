@@ -56,7 +56,7 @@ const Billing = ({ navigation, route }) => {
   };
 
   const handleGetUser = async () => {
-    await getItem("userID").then(async id => await getUser(id).then((res) => {setUserName(res?.name); console.log("Name: ", res)}).catch((err) => console.log("Error:", err))).catch((err) => console.log("Error:", err))
+    await getItem("userID").then(async id => await getUser(id).then((res) => {setUserName(res?.name)}).catch((err) => console.log("Error:", err))).catch((err) => console.log("Error:", err))
   }
 
   useEffect(() => {

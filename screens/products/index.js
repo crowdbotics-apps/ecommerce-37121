@@ -8,17 +8,20 @@ import TabView from '../../components/TabView';
 import { cartCount } from '../../utils';
 import Loader from '../../components/Loader';
 const ProductListingScreen = ({ navigation, route }) => {
-	const [productsList, setProductsList] = useState([]);
-	const [productQuantity, setProductQuantity] = useState('0');
-	const [isLoading, setIsLoading] = useState(false);
+	const [ productsList, setProductsList ] = useState([]);
+	const [ productQuantity, setProductQuantity ] = useState('0');
+	const [ isLoading, setIsLoading ] = useState(false);
 
 	const handleProducts = async () => {
-		setIsLoading(true)
-		const products = await getProductsList().catch((error) => { console.log('error: ', error); setIsLoading(false) });
+		setIsLoading(true);
 		var productList = [];
+		await getProductsList().then(async (products) => {
 		let i = 0;
 		while (i < products.length) {
-			const product = await getProduct(products[i].url).catch((error) => { console.log('error: ', error); setIsLoading(false) });
+			const product = await getProduct(products[i].url).catch((error) => {
+				console.log('error: ', error);
+				setIsLoading(false);
+			});
 			const availability = await productAvailability(product.availability).catch((error) =>
 				console.log('error: ', error)
 			);
@@ -26,8 +29,13 @@ const ProductListingScreen = ({ navigation, route }) => {
 			productList.push(product);
 			i += 1;
 		}
+		}).catch((error) => {
+			console.log('error: ', error);
+			setIsLoading(false);
+		});
+
 		setProductsList(productList);
-		setIsLoading(false)
+		setIsLoading(false);
 	};
 
 	useEffect(() => {
@@ -48,15 +56,16 @@ const ProductListingScreen = ({ navigation, route }) => {
 			.catch((err) => console.log('Error: ', err));
 	};
 
-	LogBox.ignoreLogs(['Require cycle: node_modules/']);
+	LogBox.ignoreLogs([ 'Require cycle: node_modules/' ]);
 
 	return (
-
 		<View style={styles.container}>
-			{isLoading ? <Loader></Loader> :
+			{isLoading ? (
+				<Loader />
+			) : (
 				<View>
 					<View style={styles.topContainer}>
-						<TabView tabTitles={['All', 'Best Products']} selected={0} />
+						<TabView tabTitles={[ 'All Products' ]} selected={0} />
 						<CartBox navigation={navigation} quantity={productQuantity} />
 						<View>
 							<TouchableOpacity onPress={handleLogout}>
@@ -80,8 +89,8 @@ const ProductListingScreen = ({ navigation, route }) => {
 							showsVerticalScrollIndicator={false}
 						/>
 					</View>
-				</View>}
-
+				</View>
+			)}
 		</View>
 	);
 };

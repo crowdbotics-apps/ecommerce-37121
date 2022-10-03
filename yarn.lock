@@ -1287,6 +1287,12 @@
 "@screens/ordercomplete@file:./screens/orderComplete":
   version "1.0.0"
 
+"@screens/orderdetails@file:./screens/orderDetails":
+  version "1.0.0"
+
+"@screens/orderslist@file:./screens/ordersList":
+  version "1.0.0"
+
 "@screens/productdetails@file:./screens/productDetails":
   version "1.0.0"
 

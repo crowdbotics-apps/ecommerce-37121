@@ -11,6 +11,7 @@ const Product = ({ product, navigation }) => {
           }}
         >
           <Image
+            resizeMode="contain"
             source={{ uri: product?.images[0]?.original }}
             style={productStyles.productImage}
           />
@@ -47,8 +48,7 @@ const productStyles = StyleSheet.create({
   productImage: {
     height: "100%",
     width: "100%",
-    borderRadius: 10,
-    resizeMode: "stretch"
+    borderRadius: 10
   },
   descriptionContainer: {
     justifyContent: "center",

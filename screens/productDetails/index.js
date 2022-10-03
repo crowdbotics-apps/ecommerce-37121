@@ -50,7 +50,7 @@ const ProductDetails = ({ navigation, route }) => {
       await addToBasket({
         quantity,
         url: id,
-        partner_id: 4,
+        partner_id: 1,
       }).then((res) => {setIsLoading(false);navigation.navigate("cart")}).catch((error) => {console.log("error: ", error); setIsLoading(false)})
       
     } catch (error) {
@@ -64,6 +64,7 @@ const ProductDetails = ({ navigation, route }) => {
       {isLoading && <Loader></Loader> }
       <View style={styles.imageContainer}>
         <Image
+          resizeMode="cover"
           source={{ uri: product?.images ? product?.images[0].original : "jt" }}
           style={styles.logo}
         />
@@ -131,11 +132,10 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: "center",
     justifyContent: "center",
-    height: 200
+    height: 300
   },
   logo: {
-    resizeMode: "stretch",
-    height: 200,
+    height: "100%",
     width: "100%"
   },
   cardContainer: {
