@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Text, Image, StyleSheet, View, ScrollView, LogBox } from 'react-native'
 import Button from '../../components/Button'
 import DetailsCard from '../../components/DetailCard'
@@ -7,8 +7,10 @@ import { useEffect } from 'react'
 import { addUserAddress, fetchUserCountries, getUser } from '../../apis';
 import { getItem } from '../../utils'
 import Loader from '../../components/Loader'
+import { GlobalOptionsContext } from '@options';
 
 const Billing = ({ navigation, route }) => {
+  const gOptions = useContext(GlobalOptionsContext)
   const [address, setAddress] = useState({
     formatted_address: "",
     country: "",
@@ -48,7 +50,7 @@ const Billing = ({ navigation, route }) => {
       state: address.state,
       is_default_for_shipping: true,
       is_default_for_billing: true,
-      country: userCountry,
+      country: gOptions.oscar_countries,
       lat: address.lat,
       lng: address.lng,
     })
@@ -59,9 +61,7 @@ const Billing = ({ navigation, route }) => {
   const handleGetUser = async () => {
     await getItem("userID").then(async id => await getUser(id).then((res) => {setUserName(res?.name)}).catch((err) => console.log("Error:", err))).catch((err) => console.log("Error:", err))
   }
-  const handleGetCountry = async () => {
-   await fetchUserCountries().then((res) => {setUserCountry(res[0]?.url)}).catch((err) => console.log("Error:", err))
-  }
+ 
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
@@ -71,7 +71,6 @@ const Billing = ({ navigation, route }) => {
       setBasketData(route?.params?.basketData)
     }
     handleGetUser();
-    handleGetCountry();
   }, []);
 
   return (
