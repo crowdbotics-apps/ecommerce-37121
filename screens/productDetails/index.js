@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect, useContext } from "react"
 import { Text, View, StyleSheet, Image, Pressable } from "react-native"
-import { addToBasket, getPrice } from "../../apis"
+import { addToBasket } from "../../apis"
 import Button from "../../components/Button"
 import CartBox from "../../components/CartBox"
 import Loader from "../../components/Loader"
@@ -10,24 +10,17 @@ import { GlobalOptionsContext } from '@options';
 const ProductDetails = ({ navigation, route }) => {
   const gOptions = useContext(GlobalOptionsContext)
   const [product, setProduct] = useState({});
-  const [productPrice, setProductPrice] = useState(1);
   const [quantity, setQuantity] = useState(1);
   const [productQuantity, setProductQuantity] = useState("0");
   const [isLoading, setIsLoading] = useState(false);
-
-  const handlePrice = async priceUrl => {
-    const price = await getPrice(priceUrl).catch((error) =>console.log("error: ", error));
-    setProductPrice(price)
-  }
-
   const cartProducts = async () =>{
     await cartCount().then((res) => setProductQuantity(res)).catch((err) => console.log("Error: ", err));
    }
    
   useEffect(() => {
-    if (route?.params?.product) {
-      setProduct(route?.params?.product)
-      handlePrice(route?.params?.product?.price);
+    if (route?.params) {
+      const {product} = route?.params
+      setProduct(product)
     };
     cartProducts();
   }, []);
@@ -50,7 +43,7 @@ const ProductDetails = ({ navigation, route }) => {
       await addToBasket({
         quantity,
         url: id,
-        partner_id: gOptions.partner_id,
+        partner_id: product?.partner_info?.id,
       }).then((res) => {setIsLoading(false);navigation.navigate("cart")}).catch((error) => {console.log("error: ", error); setIsLoading(false)})
       
     } catch (error) {
@@ -86,8 +79,8 @@ const ProductDetails = ({ navigation, route }) => {
         </View>
         <View style={styles.counterContainer}>
           <View style={styles.priceContainer}>
-            <Text style={styles.priceText}>${productPrice?.excl_tax}</Text>
-            <Text style={styles.acctualPrice}>${productPrice?.incl_tax}</Text>
+            <Text style={styles.priceText}>${product?.price?.excl_tax}</Text>
+            <Text style={styles.acctualPrice}>${product?.price?.incl_tax}</Text>
           </View>
 
           <View style={styles.counter}>

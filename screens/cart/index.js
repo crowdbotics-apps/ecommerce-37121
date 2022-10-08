@@ -8,7 +8,7 @@ import Loader from "../../components/Loader"
 import OrderCard from "../../components/OrderCard"
 
 const ShoppingCart = ({ navigation }) => {
-  const [cartProducts, setCartProducts] = useState([])
+  const [cartProducts, setCartProducts] = useState([]);
   const [basketData, setBasketData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,6 +20,7 @@ const ShoppingCart = ({ navigation }) => {
       setIsLoading(false)
     }).catch(err => {console.log("ERROR: ", err); setIsLoading(false)});
   }
+
   useEffect(() => {
     handleGetBasket();
   }, [])

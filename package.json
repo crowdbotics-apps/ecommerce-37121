@@ -23,12 +23,13 @@
     "@reduxjs/toolkit": "^1.5.0",
     "@screens/billing": "file:./screens/billing",
     "@screens/cart": "file:./screens/cart",
-    "@screens/orderdetails": "file:./screens/orderDetails",
     "@screens/ordercomplete": "file:./screens/orderComplete",
+    "@screens/orderdetails": "file:./screens/orderDetails",
     "@screens/orderslist": "file:./screens/ordersList",
     "@screens/productdetails": "file:./screens/productDetails",
     "@screens/products": "file:./screens/products",
     "@screens/shipping": "file:./screens/shipping",
+    "@screens/storelist": "file:./screens/storeList",
     "axios": "^0.21.1",
     "prop-types": "15.8.1",
     "react": "17.0.1",
@@ -87,4 +88,3 @@
     ]
   }
 }
-

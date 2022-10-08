@@ -60,7 +60,7 @@ const OrderHistoryModal = ({ navigation }) => {
       <View>
       <View style={styles.flexRow}>
               <Text style={styles.fnt16}>Orders List</Text>
-              <Pressable onPress={() => navigation.navigate("products")}>
+              <Pressable onPress={() => navigation.navigate("storeList")}>
               <Image source={require("../../assets/home.png")} style={styles.homeIcon} />
               </Pressable>
       </View>

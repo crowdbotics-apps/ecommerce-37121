@@ -141,7 +141,7 @@ const LoginSignup = ({ navigation }) => {
   const checkAuth = async () =>{
   const token = await getItem("token")
      if(token){
-      navigation.replace('products')
+      navigation.replace('storeList')
      }
   }
   

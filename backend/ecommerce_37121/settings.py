@@ -383,3 +383,9 @@ ORDER_STATUS_CANCELED_USER = 'Cancelled by User'
 
 OLD_PASSWORD_FIELD_ENABLED = True
 # OSCAR_SHOP_NAME = 'Drone Express'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}

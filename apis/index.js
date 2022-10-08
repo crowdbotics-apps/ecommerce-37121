@@ -26,19 +26,9 @@ export const getProduct = async url => {
   return data;
 };
 
-export const getPrice = async url => {
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  });
-  const data = await response.json();
-  return data;
-};
 
-export const productAvailability = async url => {
-  const response = await fetch(url, {
+export const productAvailability = async id => {
+  const response = await fetch(`${BASE_URL}/api/products/${id}/availability/`, {
     method: "GET",
     headers: { "Content-Type": "application/json" }
   });
@@ -73,7 +63,7 @@ export const getBasket = async () => {
   return data;
 };
 
-export const removeFromBasket = async url => {
+export const removeFromBasket = async (url) => {
   const token = await getItem("token")
   const response = await fetch(url, {
     method: "DELETE",
@@ -186,9 +176,9 @@ export const fetchOrderHistory = async () => {
 };
 
 
-export const getUser = async (id) => {
+export const getUser = async () => {
   const token = await getItem("token")
-  const response = await fetch(`${BASE_URL}/api/v1/profile/${id}/`, {
+  const response = await fetch(`${BASE_URL}/rest-auth/user/`, {
     method: "GET",
     headers: {
       Accept: "*/*",
@@ -202,26 +192,27 @@ export const getUser = async (id) => {
   return data;
 };
 
-export const fetchUserCountries = async () => {
-  const token = await getItem("token")
-  const response = await fetch(`${BASE_URL}/api/countries/`, {
-    method: "GET",
-    headers: {
-      Accept: "*/*",
-      "Content-Type": "application/json",
-      Authorization: "Token " + token
-    },
-   
-  });
-  const data = await response.json();
-
-  return data;
-};
 
 export const logoutUser = async () => {
   const token = await getItem("token")
   const response = await fetch(`${BASE_URL}/rest-auth/logout/`, {
     method: "POST",
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+      Authorization: "Token " + token
+    },
+   
+  });
+  const data = await response.json();
+
+  return data;
+};
+
+export const getVenders = async () => {
+  const token = await getItem("token")
+  const response = await fetch(`${BASE_URL}/consumer/api/v1/vendors/`, {
+    method: "GET",
     headers: {
       Accept: "*/*",
       "Content-Type": "application/json",

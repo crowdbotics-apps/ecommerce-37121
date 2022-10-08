@@ -22,7 +22,8 @@ const Billing = ({ navigation, route }) => {
   const AddressAutoComplete = modules[0].value.navigator //module_index : position of the module in modules folder
   const [cartProducts, setCartProducts] = useState([]);
   const [basketData, setBasketData] = useState({});
-  const [userName, setUserName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const[addressError, setAddressError] = useState("");
 
@@ -43,11 +44,10 @@ const Billing = ({ navigation, route }) => {
   const handleAddAddresses = async () => {
     if(address.city && address.state){
       setIsLoading(true)
-      const split_name = userName?.split(" ");
       await addUserAddress({
         title: 'Mr',
-        first_name: split_name[0],
-        last_name: split_name[1],
+        first_name: firstName,
+        last_name: lastName,
         line1: address.formatted_address,
         line4: address.city,
         state: address.state,
@@ -69,11 +69,10 @@ const Billing = ({ navigation, route }) => {
   };
 
   const handleGetUser = async () => {
-    const userID = await getItem("userID");
-    if(userID){
-      await getUser(userID).then((res) => {setUserName(res?.name)}).catch((err) => console.log("Error:", err))
-    }
-   
+      await getUser().then((res) => {
+        setFirstName(res?.first_name);
+        setLastName(res?.last_name);
+      }).catch((err) => console.log("Error:", err))   
   }
  
 
