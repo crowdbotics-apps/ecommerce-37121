@@ -47,7 +47,7 @@ const ProductListingScreen = ({ navigation, route }) => {
 		cartProducts();
 		if (route?.params) {
 			const { products } = route?.params
-			updateProductsList(products);
+			updateProductsList(products || []);
 		}
 	}, []);
 
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
 	topContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingRight: 20 },
 	productImage: { height: 20, width: 20, resizeMode: 'contain' },
 	orderImage: { height: 24, width: 24, resizeMode: 'contain' },
-	noProduct: { fontSize: 18, textAlign: 'center', fontWeight: 'bold' }
+	noProduct: { fontSize: 18, textAlign: 'center', fontWeight: 'bold', color:"#7d8087" }
 });
 
 export default ProductListingScreen;

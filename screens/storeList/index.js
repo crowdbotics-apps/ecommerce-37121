@@ -25,7 +25,6 @@ const StoreList = ({ navigation, route }) => {
     setIsLoading(true)
     await getVenders().then((res) => {
       setVendors(res);
-      console.log("setVendors: ", res)
       setSearchedStores(res);
       setIsLoading(false)
     }).catch((err) => {
@@ -64,9 +63,7 @@ const StoreList = ({ navigation, route }) => {
 
 
   return (
-    <ScrollView style={styles.container}>
-
-      
+    <ScrollView style={styles.container}>      
       <View style={styles.topContainer}>
             <Text style={styles.inputText}>Search</Text>
 						<CartBox navigation={navigation} quantity={productQuantity} />
@@ -97,8 +94,8 @@ const StoreList = ({ navigation, route }) => {
       {
         isLoading ? <Loader></Loader>: <View>
           {vendors && vendors.map((store, index) =>
-            <Pressable style={[styles.cardWrapper]} key={index} onPress={() => navigation.navigate("products", store)}>
-              <View style={[styles.walletCard, { backgroundColor: "#D9D9D9" }]}>
+            <Pressable style={styles.cardWrapper} key={index} onPress={() => navigation.navigate("products", store)}>
+              <View style={styles.walletCard}>
                 <View style={styles.walletInner}>
                   <Image
                     source={{ uri: store?.cover || "cover" }}
@@ -112,10 +109,11 @@ const StoreList = ({ navigation, route }) => {
               </View>
             </Pressable>
           )
-
           }
+
         </View>
       }
+      {vendors.length === 0 && !isLoading && <Text style={styles.noVendors}>No Stores Found!</Text>}
 
     </ScrollView>
   );
@@ -141,7 +139,7 @@ const styles = StyleSheet.create({
   },
 
   walletCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#D9D9D9",
     padding: 10,
     display: "flex",
     flexDirection: "row",
@@ -178,6 +176,7 @@ const styles = StyleSheet.create({
   topContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingRight: 20 },
 	productImage: { height: 20, width: 20, resizeMode: 'contain' },
 	orderImage: { height: 24, width: 24, resizeMode: 'contain' },
+  noVendors: { fontSize: 18, textAlign: 'center', fontWeight: 'bold', color:"#7d8087" }
 });
 
 export default StoreList;

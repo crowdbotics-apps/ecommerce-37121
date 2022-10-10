@@ -63,6 +63,17 @@ This section will show any installed modules you add from the Storyboard Modules
 
 This section outlines instructions on setting up a local development environment for the frontend of your application.
 
+## Update Options
+
+In `options/options.js` update the `globalOptions` options:
+
+```javascript
+export const globalOptions = {
+  ...
+  oscar_countries: "https://ecommerce-37121.botics.co/api/countries/US/", //URL of the country for the user
+  title : "Mr"  // Mr || Ms
+}
+```
 ## Installation
 
 ### Metro
@@ -80,6 +91,17 @@ npx react-native start
 ```
 
 ### Android
+
+Add your API key to your manifest file `android/app/src/main/AndroidManifest.xml`:
+
+```xml
+<application>
+   <!-- You will only need to add this meta-data tag, but make sure it's a child of application -->
+   <meta-data
+     android:name="com.google.android.geo.API_KEY"
+     android:value="Your Google maps API Key Here"/>
+</application>
+```
 
 ```sh
 npx react-native run-android

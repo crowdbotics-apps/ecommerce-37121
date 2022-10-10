@@ -5,6 +5,7 @@ export const globalOptions = {
   url: "https://ecommerce_37121.botics.co",
   api: "https://ecommerce_37121.botics.co/api/v1",
   oscar_countries: "https://ecommerce_37121.botics.co/api/countries/US/",
+  title : "Mr" 
 }
 export const modulesOptions = {
   "@modules/app-menu": {

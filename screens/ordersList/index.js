@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     color: "#7C7C7C",
     fontWeight: "bold"
   },
-  noProduct:{fontSize: 18, textAlign: 'center', fontWeight: 'bold', marginTop: "20%"}
+  noProduct:{fontSize: 18, textAlign: 'center', fontWeight: 'bold', marginTop: "20%", color:"#7d8087"}
 });
 
 export default OrderHistoryModal;

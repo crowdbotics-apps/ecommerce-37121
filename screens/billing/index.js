@@ -45,7 +45,7 @@ const Billing = ({ navigation, route }) => {
     if(address.city && address.state){
       setIsLoading(true)
       await addUserAddress({
-        title: 'Mr',
+        title: gOptions.title,
         first_name: firstName,
         last_name: lastName,
         line1: address.formatted_address,
@@ -70,7 +70,7 @@ const Billing = ({ navigation, route }) => {
 
   const handleGetUser = async () => {
       await getUser().then((res) => {
-        setFirstName(res?.first_name);
+        setFirstName(res?.first_name || res?.username);
         setLastName(res?.last_name);
       }).catch((err) => console.log("Error:", err))   
   }
@@ -87,7 +87,7 @@ const Billing = ({ navigation, route }) => {
   }, []);
 
   return (
-    <View style={{ backgroundColor: '#FFF', width: '100%', height: "100%" }}>
+    <View style={styles.wrapper}>
        {isLoading && <Loader></Loader> }
       <DetailsCard basketData={basketData} />
       <View style={styles.container}>
@@ -121,6 +121,7 @@ const Billing = ({ navigation, route }) => {
 }
 
 const styles = StyleSheet.create({
+  wrapper:{ backgroundColor: '#FFF', width: '100%', height: "100%" },
   container: {
     paddingTop: 0,
     padding: 10,

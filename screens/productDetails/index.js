@@ -6,9 +6,8 @@ import Button from "../../components/Button"
 import CartBox from "../../components/CartBox"
 import Loader from "../../components/Loader"
 import { cartCount } from "../../utils"
-import { GlobalOptionsContext } from '@options';
+
 const ProductDetails = ({ navigation, route }) => {
-  const gOptions = useContext(GlobalOptionsContext)
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
   const [productQuantity, setProductQuantity] = useState("0");
