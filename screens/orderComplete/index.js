@@ -1,22 +1,20 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native"
+import { useSelector } from "react-redux";
 
 
 const OrderComplete = ({navigation, route}) => {
-  const [username, setUsername] = useState("User");
-  useEffect(() => {
-    if(route?.params.userInfo){
-      const {userInfo} = route.params;
-      setUsername(userInfo?.first_name)
-    }
-  }, []);
+  // @ts-ignore
+  const user = useSelector(state => state?.ecommerce?.user);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.heading}>Hi {username},</Text>
+        <Text style={styles.heading}>Hi {user.first_name ? user.first_name : user.username},</Text>
         <Text style={styles.subHeading}>Your order has been completed.</Text>
       </View>
       <Image
+        // @ts-ignore
         source={require("../../assets/orderCompleted.png")}
         style={styles.image}
       />
@@ -25,6 +23,7 @@ const OrderComplete = ({navigation, route}) => {
         <Text style={styles.input}>Click to see</Text>
      
         <Image
+          // @ts-ignore
           source={require("../../assets/dropdownIcon.png")}
           style={styles.searchIcon}
         />

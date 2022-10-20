@@ -2,30 +2,41 @@ import React, { useContext, useState } from 'react'
 import { Text, Image, StyleSheet, View, ScrollView, LogBox } from 'react-native'
 import Button from '../../components/Button'
 import DetailsCard from '../../components/DetailCard'
+// @ts-ignore
 import { modules } from '@modules'
 import { useEffect } from 'react'
 import { addUserAddress, getUser } from '../../apis';
-import { getItem } from '../../utils'
+import { getItem } from '../../utils';
 import Loader from '../../components/Loader'
 import { GlobalOptionsContext } from '@options';
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserInfo } from '../../store'
 
 const Billing = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const gOptions = useContext(GlobalOptionsContext)
   const [address, setAddress] = useState({
     formatted_address: "",
     country: "",
-    state: "",
-    city: "",
+    state: "NY",
+    city: "NY",
     lat: "",
     lng: ""
-  })
+  });
+  // @ts-ignore
+  const user = useSelector(state => state?.ecommerce?.user);
+  useEffect(() =>{
+    setFirstName(user?.first_name || user?.username);
+    setLastName(user?.last_name);
+  }, [user])
+
   const AddressAutoComplete = modules[0].value.navigator //module_index : position of the module in modules folder
   const [cartProducts, setCartProducts] = useState([]);
   const [basketData, setBasketData] = useState({});
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const[addressError, setAddressError] = useState("");
+  const [addressError, setAddressError] = useState("");
 
   const onSelectAddress = data => {
     setAddressError("")
@@ -42,7 +53,7 @@ const Billing = ({ navigation, route }) => {
   }
 
   const handleAddAddresses = async () => {
-    if(address.city && address.state){
+    if (address.city && address.state) {
       setIsLoading(true)
       await addUserAddress({
         title: gOptions.title,
@@ -56,25 +67,24 @@ const Billing = ({ navigation, route }) => {
         country: gOptions.oscar_countries,
         lat: address.lat,
         lng: address.lng,
-      }).then((res) =>{ 
+      }).then((res) => {
         setIsLoading(false)
         navigation.navigate("shipping", { basketData, address })
-      }).catch((err) =>{
+      }).catch((err) => {
         setIsLoading(false);
         console.log("Error: ", err)
       })
-    }else{
+    } else {
       setAddressError("No address is provided!")
-    }   
+    }
   };
 
   const handleGetUser = async () => {
-      await getUser().then((res) => {
-        setFirstName(res?.first_name || res?.username);
-        setLastName(res?.last_name);
-      }).catch((err) => console.log("Error:", err))   
+    await getUser().then((res) => {
+      dispatch(getUserInfo(res));
+    }).catch((err) => console.log("Error:", err))
   }
- 
+
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
@@ -88,7 +98,7 @@ const Billing = ({ navigation, route }) => {
 
   return (
     <View style={styles.wrapper}>
-       {isLoading && <Loader></Loader> }
+      {isLoading && <Loader></Loader>}
       <DetailsCard basketData={basketData} />
       <View style={styles.container}>
         <View style={styles.deliveryDetailsContainer}>
@@ -121,7 +131,7 @@ const Billing = ({ navigation, route }) => {
 }
 
 const styles = StyleSheet.create({
-  wrapper:{ backgroundColor: '#FFF', width: '100%', height: "100%" },
+  wrapper: { backgroundColor: '#FFF', width: '100%', height: "100%" },
   container: {
     paddingTop: 0,
     padding: 10,
@@ -192,7 +202,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     // height: 250,
   },
-  errorStyle:{
+  errorStyle: {
     color: "red",
     marginLeft: 20, marginTop: 5
   }

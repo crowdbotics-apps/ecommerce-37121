@@ -1,24 +1,32 @@
 // @ts-nocheck
-import React, { useState, useEffect, useContext } from "react"
+import React, { useState, useEffect } from "react"
 import { Text, View, StyleSheet, Image, Pressable } from "react-native"
+import { useDispatch, useSelector } from "react-redux"
 import { addToBasket } from "../../apis"
 import Button from "../../components/Button"
 import CartBox from "../../components/CartBox"
 import Loader from "../../components/Loader"
+import { cartCounts } from "../../store"
 import { cartCount } from "../../utils"
 
 const ProductDetails = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
   const [productQuantity, setProductQuantity] = useState("0");
   const [isLoading, setIsLoading] = useState(false);
-  const cartProducts = async () =>{
-    await cartCount().then((res) => setProductQuantity(res)).catch((err) => console.log("Error: ", err));
-   }
-   
+  const cartItems = useSelector(state => state?.ecommerce?.cartItems);
+  useEffect(() => {
+    setProductQuantity(cartItems)
+  }, [cartItems])
+
+  const cartProducts = async () => {
+    await cartCount().then((res) => dispatch(cartCounts(res))).catch((err) => console.log("Error: ", err));
+  }
+
   useEffect(() => {
     if (route?.params) {
-      const {product} = route?.params
+      const { product } = route?.params
       setProduct(product)
     };
     cartProducts();
@@ -43,8 +51,11 @@ const ProductDetails = ({ navigation, route }) => {
         quantity,
         url: id,
         partner_id: product?.partner_info?.id,
-      }).then((res) => {setIsLoading(false);navigation.navigate("cart")}).catch((error) => {console.log("error: ", error); setIsLoading(false)})
-      
+      }).then(async (res) => {
+        setIsLoading(false);
+        await cartProducts().then((res) => navigation.navigate("cart"));
+      }).catch((error) => { console.log("error: ", error); setIsLoading(false) })
+
     } catch (error) {
       console.log("ERROR: ", error)
       setIsLoading(false)
@@ -53,7 +64,7 @@ const ProductDetails = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      {isLoading && <Loader></Loader> }
+      {isLoading && <Loader></Loader>}
       <View style={styles.imageContainer}>
         <Image
           resizeMode="cover"
@@ -64,13 +75,13 @@ const ProductDetails = ({ navigation, route }) => {
       <View style={styles.cardContainer}>
         <View style={styles.bar} />
         <View style={styles.cartContainer}>
-        <Text style={styles.title}>{product?.title}</Text>
-        <CartBox navigation={navigation} quantity={productQuantity}></CartBox>
+          <Text style={styles.title}>{product?.title}</Text>
+          <CartBox navigation={navigation} quantity={productQuantity}></CartBox>
         </View>
         <Text style={styles.description}>{product?.description}</Text>
         <View style={styles.availabilityContainer}>
           <Text style={styles.statusText}>Availability Status: </Text>
-          <Text style={[styles.availability,{color: product?.availability_status?.is_available_to_buy ? "#12D790" : "#EA4335",}]}>
+          <Text style={[styles.availability, { color: product?.availability_status?.is_available_to_buy ? "#12D790" : "#EA4335", }]}>
             {product?.availability_status?.is_available_to_buy
               ? 'Available'
               : "Not available"}
@@ -239,9 +250,11 @@ const styles = StyleSheet.create({
     marginVertical: 15
   },
   statusText: { fontSize: 12, fontWeight: "bold", color: "#626468" },
-  cartContainer:{ flexDirection: "row",
-  justifyContent: "space-between",
-  alignItems: "center",},
+  cartContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   availability: {
     fontSize: 14,
     fontWeight: "bold"

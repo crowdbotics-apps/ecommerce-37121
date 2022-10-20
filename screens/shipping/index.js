@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react"
 import { Text, StyleSheet, View, Image, ScrollView } from 'react-native'
 import { Checkbox, RadioButton } from "react-native-paper"
+import { useDispatch, useSelector } from "react-redux"
 import { getCountry, getUserAddress, startCheckout } from "../../apis"
 import Button from "../../components/Button"
 import DetailsCard from "../../components/DetailCard"
 import Loader from "../../components/Loader"
 import Input from "../../components/TextInput"
+import { getUserAddresses, getUserCountry } from "../../store"
 
 const ShippingAddress = ({ navigation, route }) => {
-  const [address, setAddress] = useState({});
+  const dispatch = useDispatch();
   const [checked, setChecked] = useState(true);
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
@@ -22,13 +24,19 @@ const ShippingAddress = ({ navigation, route }) => {
   const [shippingAddress, setShippingAddress] = useState({});
   const [basketDataObj, setBasketDataObj] = useState({})
 
+  const userCountry = useSelector(state => state?.ecommerce?.country);
+  const userAddress = useSelector(state => state?.ecommerce?.userAddress);
+  useEffect(() => {
+    setShippingAddress(userAddress);
+    setCountry(userCountry);
+  }, [userCountry, userAddress])
+
   const handleGetAddress = async () => {
     await getUserAddress().then(async (res) => {
       const resultLength = res.length;
-      setAddress(res[resultLength - 1]);
-      setShippingAddress(res[resultLength - 1]);
+      dispatch(getUserAddresses(res[resultLength - 1]))
       await getCountry(res[resultLength - 1]?.country).then((response) => {
-        setCountry(response.name)
+        dispatch(getUserCountry(response.name))
       }).catch((err) => console.log("Error: ", err))
     }).catch((err) => console.log("Error: ", err));
 
@@ -64,7 +72,7 @@ const ShippingAddress = ({ navigation, route }) => {
     try {
       await startCheckout(obj).then((res) => {
         setIsLoading(false);
-        navigation.navigate('orderComplete', { userInfo: res?.shipping_address })
+        navigation.navigate('orderComplete')
       }).catch((error) => console.log("Error: ", error))
     } catch (error) {
       console.log("Error: ", error)

@@ -1,3 +1,4 @@
+// @ts-ignore
 import { getGlobalOptions } from "@options"
 import { getItem } from "../utils"
 

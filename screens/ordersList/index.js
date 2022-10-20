@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { FlatList, View, Text, StyleSheet, Pressable, RefreshControl, Dimensions, Image } from "react-native";
-
+import { getOrdersList } from "../../store";
 import { fetchOrderHistory } from "../../apis";
+import { useDispatch, useSelector } from "react-redux";
 const deviceWidth = Dimensions.get("window").width;
 
 const OrderHistoryModal = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [orderHistory, setOrderHistory] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  // @ts-ignore
+  const userOrders = useSelector(state => state?.ecommerce?.orderList);
+  useEffect(() => {
+    setOrderHistory(userOrders);
+  }, [userOrders]);
 
   useEffect(() => {
     setRefresh(true);
@@ -16,8 +23,8 @@ const OrderHistoryModal = ({ navigation }) => {
   const getOrders = async () => {
     await fetchOrderHistory()
       .then(res => {
+        dispatch(getOrdersList(res))
         setRefresh(false);
-        setOrderHistory(res);
       }).catch((error) => { console.log("Error: ", error); setRefresh(false); });
   };
 
@@ -58,13 +65,16 @@ const OrderHistoryModal = ({ navigation }) => {
 
     <View style={styles.modalView}>
       <View>
-      <View style={styles.flexRow}>
-              <Text style={styles.fnt16}>Orders List</Text>
-              <Pressable onPress={() => navigation.navigate("storeList")}>
-              <Image source={require("../../assets/home.png")} style={styles.homeIcon} />
-              </Pressable>
-      </View>
-      {orderHistory.length === 0 && !refresh && <Text style={styles.noProduct}>No Orders Found</Text>}
+        <View style={styles.flexRow}>
+          <Text style={styles.fnt16}>Orders List</Text>
+          <Pressable onPress={() => navigation.navigate("storeList")}>
+            <Image 
+            // @ts-ignore
+            source={require("../../assets/home.png")}
+            style={styles.homeIcon} />
+          </Pressable>
+        </View>
+        {orderHistory.length === 0 && !refresh && <Text style={styles.noProduct}>No Orders Found</Text>}
         <FlatList
           data={orderHistory}
           showsVerticalScrollIndicator={false}
@@ -150,7 +160,7 @@ const styles = StyleSheet.create({
   homeIcon: {
     width: 24,
     height: 24,
-  resizeMode: "contain"
+    resizeMode: "contain"
   },
   mainText: {
     fontSize: 16,
@@ -193,7 +203,7 @@ const styles = StyleSheet.create({
     color: "#7C7C7C",
     fontWeight: "bold"
   },
-  noProduct:{fontSize: 18, textAlign: 'center', fontWeight: 'bold', marginTop: "20%", color:"#7d8087"}
+  noProduct: { fontSize: 18, textAlign: 'center', fontWeight: 'bold', marginTop: "20%", color: "#7d8087" }
 });
 
 export default OrderHistoryModal;

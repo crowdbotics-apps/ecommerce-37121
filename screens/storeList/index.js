@@ -10,27 +10,34 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { getVenders, logoutUser } from "../../apis";
+import { getVendorsList, cartCounts } from "../../store";
+import { logoutUser, getVenders } from "../../apis";
 import CartBox from "../../components/CartBox";
 import Loader from "../../components/Loader";
 import { cartCount } from "../../utils";
-
+import { useDispatch, useSelector } from "react-redux";
 const StoreList = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const [vendors, setVendors] = useState([]);
   const [searchedStores, setSearchedStores] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [productQuantity, setProductQuantity] = useState('0');
 
+  // @ts-ignore
+  const stores = useSelector(state => state?.ecommerce?.stores);
+  const cartItems = useSelector(state => state?.ecommerce?.cartItems);
+  useEffect(() => {
+    setVendors(stores);
+    setSearchedStores(stores);
+    setProductQuantity(cartItems)
+  },[stores || cartItems])
+
   const handleGetStores = async () => {
     setIsLoading(true)
     await getVenders().then((res) => {
-      setVendors(res);
-      setSearchedStores(res);
+      dispatch(getVendorsList(res))
       setIsLoading(false)
-    }).catch((err) => {
-      console.log("Error: ", err)
-      setIsLoading(false)
-    })
+    });
   }
 
   const handleSearchStore = async (text) => {
@@ -43,18 +50,18 @@ const StoreList = ({ navigation, route }) => {
   }
 
   const handleLogout = async () => {
-		await logoutUser()
-			.then(async (res) => {
-				await AsyncStorage.removeItem('token');
-				await AsyncStorage.removeItem('userID');
-				navigation.navigate('login');
-			})
-			.catch((err) => console.log('Error: ', err));
-	};
+    await logoutUser()
+      .then(async (res) => {
+        await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('userID');
+        navigation.navigate('login');
+      })
+      .catch((err) => console.log('Error: ', err));
+  };
 
   const cartProducts = async () => {
-		await cartCount().then((res) => setProductQuantity(res)).catch((err) => console.log('Error: ', err));
-	};
+    await cartCount().then((res) => dispatch(cartCounts(res))).catch((err) => console.log('Error: ', err));
+  };
 
   useEffect(() => {
     handleGetStores();
@@ -63,26 +70,26 @@ const StoreList = ({ navigation, route }) => {
 
 
   return (
-    <ScrollView style={styles.container}>      
+    <ScrollView style={styles.container}>
       <View style={styles.topContainer}>
-            <Text style={styles.inputText}>Search</Text>
-						<CartBox navigation={navigation} quantity={productQuantity} />
-						<TouchableOpacity onPress={() => navigation.navigate("ordersList")}>
-							<Image
-								// @ts-ignore
-								source={require("../../assets/orderIcon.png")}
-								style={styles.orderImage}
-							/>
-						</TouchableOpacity>
-						<View>
-							<TouchableOpacity onPress={handleLogout}>
-								<Image
-									source={{ uri: 'https://www.iconsdb.com/icons/preview/gray/logout-xxl.png' }}
-									style={styles.productImage}
-								/>
-							</TouchableOpacity>
-						</View>
-					</View>
+        <Text style={styles.inputText}>Search</Text>
+        <CartBox navigation={navigation} quantity={productQuantity} />
+        <TouchableOpacity onPress={() => navigation.navigate("ordersList")}>
+          <Image
+            // @ts-ignore
+            source={require("../../assets/orderIcon.png")}
+            style={styles.orderImage}
+          />
+        </TouchableOpacity>
+        <View>
+          <TouchableOpacity onPress={handleLogout}>
+            <Image
+              source={{ uri: 'https://www.iconsdb.com/icons/preview/gray/logout-xxl.png' }}
+              style={styles.productImage}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Search store"
@@ -92,7 +99,7 @@ const StoreList = ({ navigation, route }) => {
       <Text style={styles.subTitle}>Select store</Text>
 
       {
-        isLoading ? <Loader></Loader>: <View>
+        isLoading ? <Loader></Loader> : <View>
           {vendors && vendors.map((store, index) =>
             <Pressable style={styles.cardWrapper} key={index} onPress={() => navigation.navigate("products", store)}>
               <View style={styles.walletCard}>
@@ -174,9 +181,9 @@ const styles = StyleSheet.create({
   },
   subTitle: { fontSize: 18, fontWeight: "bold", color: "#26292A", marginLeft: 5, marginTop: 30, marginBottom: 20 },
   topContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingRight: 20 },
-	productImage: { height: 20, width: 20, resizeMode: 'contain' },
-	orderImage: { height: 24, width: 24, resizeMode: 'contain' },
-  noVendors: { fontSize: 18, textAlign: 'center', fontWeight: 'bold', color:"#7d8087" }
+  productImage: { height: 20, width: 20, resizeMode: 'contain' },
+  orderImage: { height: 24, width: 24, resizeMode: 'contain' },
+  noVendors: { fontSize: 18, textAlign: 'center', fontWeight: 'bold', color: "#7d8087" }
 });
 
 export default StoreList;

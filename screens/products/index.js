@@ -5,14 +5,19 @@ import { logoutUser, productAvailability } from '../../apis';
 import CartBox from '../../components/CartBox';
 import Product from '../../components/Product';
 import TabView from '../../components/TabView';
-import { cartCount } from '../../utils';
 import Loader from '../../components/Loader';
+import { useSelector } from 'react-redux';
 const ProductListingScreen = ({ navigation, route }) => {
 	const [productsList, setProductsList] = useState([]);
 	const [productQuantity, setProductQuantity] = useState('0');
 	const [isLoading, setIsLoading] = useState(false);
+	// @ts-ignore
+	const cartItems = useSelector(state => state?.ecommerce?.cartItems);
 
-
+	useEffect(() => {
+		setProductQuantity(cartItems)
+	}, [cartItems])
+	
 	const handleLogout = async () => {
 		await logoutUser()
 			.then(async (res) => {
@@ -28,7 +33,7 @@ const ProductListingScreen = ({ navigation, route }) => {
 		setIsLoading(true)
 		const newState = await products.filter(async product => {
 
-			const availability = await productAvailability(product.id).catch((error) => {console.log('error: ', error); setIsLoading(false)});
+			const availability = await productAvailability(product.id).catch((error) => { console.log('error: ', error); setIsLoading(false) });
 
 			product.availability_status = availability;
 
@@ -38,18 +43,14 @@ const ProductListingScreen = ({ navigation, route }) => {
 		setIsLoading(false)
 	};
 
-	const cartProducts = async () => {
-		await cartCount().then((res) => setProductQuantity(res)).catch((err) => console.log('Error: ', err));
-	};
 
 	useEffect(() => {
 		LogBox.ignoreLogs(['Require cycle: node_modules/']);
-		cartProducts();
 		if (route?.params) {
 			const { products } = route?.params
 			updateProductsList(products || []);
 		}
-	}, []);
+	}, [route?.params]);
 
 	return (
 		<View style={styles.container}>
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
 	topContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingRight: 20 },
 	productImage: { height: 20, width: 20, resizeMode: 'contain' },
 	orderImage: { height: 24, width: 24, resizeMode: 'contain' },
-	noProduct: { fontSize: 18, textAlign: 'center', fontWeight: 'bold', color:"#7d8087" }
+	noProduct: { fontSize: 18, textAlign: 'center', fontWeight: 'bold', color: "#7d8087" }
 });
 
 export default ProductListingScreen;
