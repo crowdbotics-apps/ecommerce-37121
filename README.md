@@ -118,6 +118,25 @@ npx react-native run-ios
 
 Follow instructions at their [README.md](https://github.com/oblador/react-native-vector-icons/blob/master/README.md#installation)
 
+
+## Global Configs
+in options/options.js update the `globalOptions` object.
+
+```javascript
+export const globalOptions = {
+  name: "ecommerce_37121",
+  url: "https://368e-39-53-96-207.ngrok.io",
+  api: "https://368e-39-53-96-207.ngrok.io/api/v1",
+  oscar_countries: "https://368e-39-53-96-207.ngrok.io/api/countries/US/",
+  title : "Mr" 
+}
+```
+
+## Store (Redux-slice)
+Project store is implemented in `store` directory. New slices can be added to the store.
+`Modules` Store  is implemented within the modules. Project store is implemented independently from the modules.
+
+
 ## Running with Fastlane
 
 [Fastlane](https://fastlane.tools/) makes testing, building, and deploying apps
