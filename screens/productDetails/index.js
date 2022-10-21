@@ -2,12 +2,10 @@
 import React, { useState, useEffect } from "react"
 import { Text, View, StyleSheet, Image, Pressable } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
-import { addToBasket } from "../../apis"
 import Button from "../../components/Button"
 import CartBox from "../../components/CartBox"
 import Loader from "../../components/Loader"
-import { cartCounts } from "../../store"
-import { cartCount } from "../../utils"
+import { cartCounts, addToBasket, cartCount } from "../../store"
 
 const ProductDetails = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -47,11 +45,11 @@ const ProductDetails = ({ navigation, route }) => {
   const handleConfirmation = async id => {
     setIsLoading(true)
     try {
-      await addToBasket({
+      await dispatch(addToBasket({
         quantity,
         url: id,
         partner_id: product?.partner_info?.id,
-      }).then(async (res) => {
+      })).then(async (res) => {
         setIsLoading(false);
         await cartProducts().then((res) => navigation.navigate("cart"));
       }).catch((error) => { console.log("error: ", error); setIsLoading(false) })
@@ -68,7 +66,7 @@ const ProductDetails = ({ navigation, route }) => {
       <View style={styles.imageContainer}>
         <Image
           resizeMode="cover"
-          source={{ uri: product?.images ? product?.images[0].original : "jt" }}
+          source={{ uri: product?.images ? product?.images[0]?.original : "jwt"}}
           style={styles.logo}
         />
       </View>

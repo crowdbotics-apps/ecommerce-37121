@@ -1,14 +1,14 @@
+// @ts-nocheck
 import React, { useState } from "react"
 import { useEffect } from "react"
 import { Text, Image, StyleSheet, View, ScrollView, Alert } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
-import { getBasket, removeFromBasket } from "../../apis"
 import Button from "../../components/Button"
 import DetailsCard from "../../components/DetailCard"
 import Loader from "../../components/Loader"
 import OrderCard from "../../components/OrderCard"
-import { cartCounts, getMyBasket } from "../../store"
-import { cartCount } from "../../utils"
+import { cartCount, cartCounts, getBasket,removeFromBasket } from "../../store"
+
 const ShoppingCart = ({ navigation }) => {
   const [cartProducts, setCartProducts] = useState([]);
   const [basketData, setBasketData] = useState({});
@@ -25,8 +25,7 @@ const ShoppingCart = ({ navigation }) => {
 
   const handleGetBasket = async () => {
     setIsLoading(true)
-    await getBasket().then(basket => {
-      dispatch(getMyBasket(basket));
+    await dispatch(getBasket()).then(basket => {
       setIsLoading(false)
     }).catch(err => { console.log("ERROR: ", err); setIsLoading(false) });
   }
@@ -41,7 +40,7 @@ const ShoppingCart = ({ navigation }) => {
 
   const handleRemoveProduct = async url => {
     try {
-      await removeFromBasket(url)
+      await dispatch(removeFromBasket(url))
         .then(res => {
           handleGetBasket();
           getCartProducts();
@@ -53,13 +52,17 @@ const ShoppingCart = ({ navigation }) => {
   }
 
   const handleCheckout = () => {
-    if (cartProducts.length !== 0) {
-      navigation.navigate('billing', { basketData });
-    } else {
+    if ( cartProducts === undefined) {
       Alert.alert("No product in Basket!", "Please add at least one product in basket before checkout")
+    } else if (cartProducts.length === 0){
+      Alert.alert("No product in Basket!", "Please add at least one product in basket before checkout")
+    } else {
+      navigation.navigate('billing', { basketData });
     }
 
   }
+
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}

@@ -10,7 +10,7 @@ const OrderComplete = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.heading}>Hi {user.first_name ? user.first_name : user.username},</Text>
+        <Text style={styles.heading}>Hi {user?.first_name ? user?.first_name : user?.username},</Text>
         <Text style={styles.subHeading}>Your order has been completed.</Text>
       </View>
       <Image

@@ -1,7 +1,7 @@
+// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { FlatList, View, Text, StyleSheet, Pressable, RefreshControl, Dimensions, Image } from "react-native";
-import { getOrdersList } from "../../store";
-import { fetchOrderHistory } from "../../apis";
+import { getOrderList } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 const deviceWidth = Dimensions.get("window").width;
 
@@ -9,6 +9,7 @@ const OrderHistoryModal = ({ navigation }) => {
   const dispatch = useDispatch();
   const [orderHistory, setOrderHistory] = useState([]);
   const [refresh, setRefresh] = useState(false);
+
   // @ts-ignore
   const userOrders = useSelector(state => state?.ecommerce?.orderList);
   useEffect(() => {
@@ -21,9 +22,8 @@ const OrderHistoryModal = ({ navigation }) => {
   }, []);
 
   const getOrders = async () => {
-    await fetchOrderHistory()
+    await dispatch(getOrderList())
       .then(res => {
-        dispatch(getOrdersList(res))
         setRefresh(false);
       }).catch((error) => { console.log("Error: ", error); setRefresh(false); });
   };
@@ -68,10 +68,10 @@ const OrderHistoryModal = ({ navigation }) => {
         <View style={styles.flexRow}>
           <Text style={styles.fnt16}>Orders List</Text>
           <Pressable onPress={() => navigation.navigate("storeList")}>
-            <Image 
-            // @ts-ignore
-            source={require("../../assets/home.png")}
-            style={styles.homeIcon} />
+            <Image
+              // @ts-ignore
+              source={require("../../assets/home.png")}
+              style={styles.homeIcon} />
           </Pressable>
         </View>
         {orderHistory.length === 0 && !refresh && <Text style={styles.noProduct}>No Orders Found</Text>}

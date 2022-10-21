@@ -1,12 +1,11 @@
+// @ts-nocheck
 import React, { useContext, useState } from 'react'
 import { Text, Image, StyleSheet, View, ScrollView, LogBox } from 'react-native'
 import Button from '../../components/Button'
 import DetailsCard from '../../components/DetailCard'
-// @ts-ignore
 import { modules } from '@modules'
 import { useEffect } from 'react'
-import { addUserAddress, getUser } from '../../apis';
-import { getItem } from '../../utils';
+import { addUserAddress } from '../../store'
 import Loader from '../../components/Loader'
 import { GlobalOptionsContext } from '@options';
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,14 +17,14 @@ const Billing = ({ navigation, route }) => {
   const [address, setAddress] = useState({
     formatted_address: "",
     country: "",
-    state: "NY",
-    city: "NY",
+    state: "",
+    city: "",
     lat: "",
     lng: ""
   });
   // @ts-ignore
   const user = useSelector(state => state?.ecommerce?.user);
-  useEffect(() =>{
+  useEffect(() => {
     setFirstName(user?.first_name || user?.username);
     setLastName(user?.last_name);
   }, [user])
@@ -55,7 +54,7 @@ const Billing = ({ navigation, route }) => {
   const handleAddAddresses = async () => {
     if (address.city && address.state) {
       setIsLoading(true)
-      await addUserAddress({
+      await dispatch(addUserAddress({
         title: gOptions.title,
         first_name: firstName,
         last_name: lastName,
@@ -67,7 +66,7 @@ const Billing = ({ navigation, route }) => {
         country: gOptions.oscar_countries,
         lat: address.lat,
         lng: address.lng,
-      }).then((res) => {
+      })).then((res) => {
         setIsLoading(false)
         navigation.navigate("shipping", { basketData, address })
       }).catch((err) => {
@@ -80,9 +79,7 @@ const Billing = ({ navigation, route }) => {
   };
 
   const handleGetUser = async () => {
-    await getUser().then((res) => {
-      dispatch(getUserInfo(res));
-    }).catch((err) => console.log("Error:", err))
+    await dispatch(getUserInfo()).then((res) => { }).catch((err) => console.log(err))
   }
 
 
@@ -115,7 +112,7 @@ const Billing = ({ navigation, route }) => {
           <ScrollView showsVerticalScrollIndicator={false}>
             {cartProducts &&
               cartProducts.map((product, index) => (
-                <OrderCard item={product} key={index} />
+                <OrderCard item={product} key={index} index={index} />
               ))}
           </ScrollView>
         </View>

@@ -1,13 +1,16 @@
+// @ts-nocheck
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, FlatList, LogBox, Image, TouchableOpacity, Text } from 'react-native';
-import { logoutUser, productAvailability } from '../../apis';
+import { productAvailability } from '../../store/apis';
 import CartBox from '../../components/CartBox';
 import Product from '../../components/Product';
 import TabView from '../../components/TabView';
 import Loader from '../../components/Loader';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutRequest } from '../../store';
 const ProductListingScreen = ({ navigation, route }) => {
+	const dispatch = useDispatch();
 	const [productsList, setProductsList] = useState([]);
 	const [productQuantity, setProductQuantity] = useState('0');
 	const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +22,7 @@ const ProductListingScreen = ({ navigation, route }) => {
 	}, [cartItems])
 	
 	const handleLogout = async () => {
-		await logoutUser()
+		await dispatch(logoutRequest())
 			.then(async (res) => {
 				await AsyncStorage.removeItem('token');
 				await AsyncStorage.removeItem('userID');

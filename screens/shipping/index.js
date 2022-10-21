@@ -1,13 +1,14 @@
+// @ts-nocheck
 import React, { useState, useEffect } from "react"
 import { Text, StyleSheet, View, Image, ScrollView } from 'react-native'
 import { Checkbox, RadioButton } from "react-native-paper"
 import { useDispatch, useSelector } from "react-redux"
-import { getCountry, getUserAddress, startCheckout } from "../../apis"
 import Button from "../../components/Button"
 import DetailsCard from "../../components/DetailCard"
 import Loader from "../../components/Loader"
 import Input from "../../components/TextInput"
-import { getUserAddresses, getUserCountry } from "../../store"
+import { getUserAddress, getCountry, startCheckout } from "../../store"
+
 
 const ShippingAddress = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -26,21 +27,21 @@ const ShippingAddress = ({ navigation, route }) => {
 
   const userCountry = useSelector(state => state?.ecommerce?.country);
   const userAddress = useSelector(state => state?.ecommerce?.userAddress);
+
   useEffect(() => {
-    setShippingAddress(userAddress);
-    setCountry(userCountry);
+    const resultLength = userAddress.length
+    setShippingAddress(userAddress[resultLength-1]);
+    setCountry(userCountry.name);
   }, [userCountry, userAddress])
 
   const handleGetAddress = async () => {
-    await getUserAddress().then(async (res) => {
-      const resultLength = res.length;
-      dispatch(getUserAddresses(res[resultLength - 1]))
-      await getCountry(res[resultLength - 1]?.country).then((response) => {
-        dispatch(getUserCountry(response.name))
+    await dispatch(getUserAddress()).then(async (res) => {
+      const data = res?.payload;
+      const resultLength = data.length - 1;
+      const country = data[resultLength]?.country
+      dispatch(getCountry(country)).then((response) => {
       }).catch((err) => console.log("Error: ", err))
     }).catch((err) => console.log("Error: ", err));
-
-
   }
 
   // @ts-ignore
@@ -70,7 +71,7 @@ const ShippingAddress = ({ navigation, route }) => {
       }
     }
     try {
-      await startCheckout(obj).then((res) => {
+      await dispatch(startCheckout(obj)).then((res) => {
         setIsLoading(false);
         navigation.navigate('orderComplete')
       }).catch((error) => console.log("Error: ", error))

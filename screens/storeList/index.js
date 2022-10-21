@@ -10,11 +10,11 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { getVendorsList, cartCounts } from "../../store";
-import { logoutUser, getVenders } from "../../apis";
+import { cartCounts, getVendors,logoutRequest, cartCount } from "../../store";
+
 import CartBox from "../../components/CartBox";
 import Loader from "../../components/Loader";
-import { cartCount } from "../../utils";
+
 import { useDispatch, useSelector } from "react-redux";
 const StoreList = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -30,14 +30,13 @@ const StoreList = ({ navigation, route }) => {
     setVendors(stores);
     setSearchedStores(stores);
     setProductQuantity(cartItems)
-  },[stores || cartItems])
+  }, [stores, cartItems])
 
   const handleGetStores = async () => {
     setIsLoading(true)
-    await getVenders().then((res) => {
-      dispatch(getVendorsList(res))
+    await dispatch(getVendors()).then((res) => {
       setIsLoading(false)
-    });
+    }).catch((err) => { console.log("Error: ", err); setIsLoading(false) });
   }
 
   const handleSearchStore = async (text) => {
@@ -50,7 +49,7 @@ const StoreList = ({ navigation, route }) => {
   }
 
   const handleLogout = async () => {
-    await logoutUser()
+    await dispatch(logoutRequest())
       .then(async (res) => {
         await AsyncStorage.removeItem('token');
         await AsyncStorage.removeItem('userID');
@@ -67,6 +66,7 @@ const StoreList = ({ navigation, route }) => {
     handleGetStores();
     cartProducts();
   }, [])
+
 
 
   return (
