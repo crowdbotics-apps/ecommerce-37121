@@ -125,9 +125,9 @@ in options/options.js update the `globalOptions` object.
 ```javascript
 export const globalOptions = {
   name: "ecommerce_37121",
-  url: "https://368e-39-53-96-207.ngrok.io",
-  api: "https://368e-39-53-96-207.ngrok.io/api/v1",
-  oscar_countries: "https://368e-39-53-96-207.ngrok.io/api/countries/US/",
+  url: "https://ecommerce-37121.botics.co",
+  api: "https://ecommerce-37121.botics.co/api/v1",
+  oscar_countries: "https://ecommerce-37121.botics.co/api/countries/US/",
   title : "Mr" 
 }
 ```

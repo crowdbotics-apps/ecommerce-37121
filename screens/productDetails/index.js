@@ -66,7 +66,7 @@ const ProductDetails = ({ navigation, route }) => {
       <View style={styles.imageContainer}>
         <Image
           resizeMode="cover"
-          source={{ uri: product?.images ? product?.images[0]?.original : "jwt"}}
+          source={{ uri: product?.images ? product?.images[0]?.original : ""}}
           style={styles.logo}
         />
       </View>
