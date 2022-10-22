@@ -1,53 +1,28 @@
+// @ts-nocheck
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, FlatList, LogBox, Image, TouchableOpacity, Text } from 'react-native';
-import { getProduct, getProductsList, logoutUser, productAvailability } from '../../apis';
+import { productAvailability } from '../../store/apis';
 import CartBox from '../../components/CartBox';
 import Product from '../../components/Product';
 import TabView from '../../components/TabView';
-import { cartCount } from '../../utils';
 import Loader from '../../components/Loader';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutRequest } from '../../store';
 const ProductListingScreen = ({ navigation, route }) => {
-	const [ productsList, setProductsList ] = useState([]);
-	const [ productQuantity, setProductQuantity ] = useState('0');
-	const [ isLoading, setIsLoading ] = useState(false);
-
-	const handleProducts = async () => {
-		setIsLoading(true);
-		var productList = [];
-		await getProductsList().then(async (products) => {
-		let i = 0;
-		while (i < products.length) {
-			const product = await getProduct(products[i].url).catch((error) => {
-				console.log('error: ', error);
-				setIsLoading(false);
-			});
-			const availability = await productAvailability(product.availability).catch((error) =>
-				console.log('error: ', error)
-			);
-			product.availability_status = availability;
-			productList.push(product);
-			i += 1;
-		}
-		}).catch((error) => {
-			console.log('error: ', error);
-			setIsLoading(false);
-		});
-
-		setProductsList(productList);
-		setIsLoading(false);
-	};
+	const dispatch = useDispatch();
+	const [productsList, setProductsList] = useState([]);
+	const [productQuantity, setProductQuantity] = useState('0');
+	const [isLoading, setIsLoading] = useState(false);
+	// @ts-ignore
+	const cartItems = useSelector(state => state?.ecommerce?.cartItems);
 
 	useEffect(() => {
-		handleProducts();
-		const cartProducts = async () => {
-			await cartCount().then((res) => setProductQuantity(res)).catch((err) => console.log('Error: ', err));
-		};
-		cartProducts();
-	}, []);
-
+		setProductQuantity(cartItems)
+	}, [cartItems])
+	
 	const handleLogout = async () => {
-		await logoutUser()
+		await dispatch(logoutRequest())
 			.then(async (res) => {
 				await AsyncStorage.removeItem('token');
 				await AsyncStorage.removeItem('userID');
@@ -56,24 +31,47 @@ const ProductListingScreen = ({ navigation, route }) => {
 			.catch((err) => console.log('Error: ', err));
 	};
 
-	LogBox.ignoreLogs([ 'Require cycle: node_modules/' ]);
+
+	const updateProductsList = async (products) => {
+		setIsLoading(true)
+		const newState = await products.filter(async product => {
+
+			const availability = await productAvailability(product.id).catch((error) => { console.log('error: ', error); setIsLoading(false) });
+
+			product.availability_status = availability;
+
+			return product;
+		});
+		setProductsList(newState);
+		setIsLoading(false)
+	};
+
+
+	useEffect(() => {
+		LogBox.ignoreLogs(['Require cycle: node_modules/']);
+		if (route?.params) {
+			const { products } = route?.params
+			updateProductsList(products || []);
+		}
+	}, [route?.params]);
 
 	return (
 		<View style={styles.container}>
-			
+
 			{isLoading ? (
 				<Loader />
 			) : (
 				<View>
 					<View style={styles.topContainer}>
-						<TabView tabTitles={[ 'All Products' ]} selected={0} />
+						<TabView tabTitles={['All Products']} selected={0} />
 						<CartBox navigation={navigation} quantity={productQuantity} />
-						<TouchableOpacity onPress={() =>navigation.navigate("ordersList")}>
-								<Image
-									source={require("../../assets/orderIcon.png")}
-									style={styles.orderImage}
-								/>
-							</TouchableOpacity>
+						<TouchableOpacity onPress={() => navigation.navigate("ordersList")}>
+							<Image
+								// @ts-ignore
+								source={require("../../assets/orderIcon.png")}
+								style={styles.orderImage}
+							/>
+						</TouchableOpacity>
 						<View>
 							<TouchableOpacity onPress={handleLogout}>
 								<Image
@@ -115,7 +113,7 @@ const styles = StyleSheet.create({
 	topContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingRight: 20 },
 	productImage: { height: 20, width: 20, resizeMode: 'contain' },
 	orderImage: { height: 24, width: 24, resizeMode: 'contain' },
-	noProduct:{fontSize: 18, textAlign: 'center', fontWeight: 'bold'}
+	noProduct: { fontSize: 18, textAlign: 'center', fontWeight: 'bold', color: "#7d8087" }
 });
 
 export default ProductListingScreen;

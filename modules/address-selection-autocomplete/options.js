@@ -108,7 +108,7 @@ export const autoCompleteStyles = StyleSheet.create({
   }
 });
 
-const GOOGLE_API_KEY = "AIzaSyCCVxYoYX8Gd70B6w7ZoGntENMnFfKJrI4"
+const GOOGLE_API_KEY = "Your Google Api key"
 const addressAutocompleteOptions = {
   placeholder: "Enter address",
   initialRegion: {

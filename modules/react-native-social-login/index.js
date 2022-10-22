@@ -21,7 +21,7 @@ import { slice } from "./auth"
 import { styles } from "./screens/styles"
 import { SignInTab, SignupTab } from "./screens/loginsignup"
 import PasswordReset from "./screens/reset"
-import { getItem } from "../../utils"
+import { getItem } from "../../store/index.js"
 
 
 const LoginTabBar = ({ navigation, state, descriptors }) => {
@@ -141,7 +141,7 @@ const LoginSignup = ({ navigation }) => {
   const checkAuth = async () =>{
   const token = await getItem("token")
      if(token){
-      navigation.replace('products')
+      navigation.replace('storeList')
      }
   }
   

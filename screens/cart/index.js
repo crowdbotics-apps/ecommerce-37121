@@ -1,34 +1,49 @@
+// @ts-nocheck
 import React, { useState } from "react"
 import { useEffect } from "react"
 import { Text, Image, StyleSheet, View, ScrollView, Alert } from "react-native"
-import { getBasket, removeFromBasket } from "../../apis"
+import { useDispatch, useSelector } from "react-redux"
 import Button from "../../components/Button"
 import DetailsCard from "../../components/DetailCard"
 import Loader from "../../components/Loader"
 import OrderCard from "../../components/OrderCard"
+import { cartCount, cartCounts, getBasket,removeFromBasket } from "../../store"
 
 const ShoppingCart = ({ navigation }) => {
-  const [cartProducts, setCartProducts] = useState([])
+  const [cartProducts, setCartProducts] = useState([]);
   const [basketData, setBasketData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  // @ts-ignore
+  const myBasket = useSelector(state => state?.ecommerce?.myBasket);
+  useEffect(() => {
+    setCartProducts(myBasket[0]?.line_details)
+    setBasketData(myBasket[0]);
+  }, [myBasket])
+
 
   const handleGetBasket = async () => {
     setIsLoading(true)
-    await getBasket().then(basket => {
-      setCartProducts(basket[0]?.line_details)
-      setBasketData(basket[0]);
+    await dispatch(getBasket()).then(basket => {
       setIsLoading(false)
-    }).catch(err => {console.log("ERROR: ", err); setIsLoading(false)});
+    }).catch(err => { console.log("ERROR: ", err); setIsLoading(false) });
   }
+
   useEffect(() => {
     handleGetBasket();
   }, [])
 
+  const getCartProducts = async () => {
+    await cartCount().then((res) => dispatch(cartCounts(res))).catch((err) => console.log("Error: ", err));
+  }
+
   const handleRemoveProduct = async url => {
     try {
-      await removeFromBasket(url)
+      await dispatch(removeFromBasket(url))
         .then(res => {
           handleGetBasket();
+          getCartProducts();
         })
         .catch(err => console.log("ERROR: ", err))
     } catch (error) {
@@ -36,20 +51,24 @@ const ShoppingCart = ({ navigation }) => {
     }
   }
 
-  const handleCheckout = () =>{
-    if(cartProducts.length !== 0){
-      navigation.navigate('billing', { basketData });
-    }else{
+  const handleCheckout = () => {
+    if ( cartProducts === undefined) {
       Alert.alert("No product in Basket!", "Please add at least one product in basket before checkout")
+    } else if (cartProducts.length === 0){
+      Alert.alert("No product in Basket!", "Please add at least one product in basket before checkout")
+    } else {
+      navigation.navigate('billing', { basketData });
     }
-    
+
   }
+
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       style={{ backgroundColor: '#FFF' }}
     >
-       {isLoading ? <Loader></Loader> : <DetailsCard basketData={basketData} />}
+      {isLoading ? <Loader></Loader> : <DetailsCard basketData={basketData} />}
       <View style={styles.container}>
         <View style={styles.cardContent}>
           <Text style={styles.chartText}>Cart</Text>
@@ -62,7 +81,7 @@ const ShoppingCart = ({ navigation }) => {
               key={index}
             />
           ))}
-         
+
 
         <View style={styles.btnContainer}>
           <Button
@@ -147,7 +166,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     paddingHorizontal: "10%"
   },
-  noProduct:{fontSize: 18, textAlign: 'center', fontWeight: 'bold'}
+  noProduct: { fontSize: 18, textAlign: 'center', fontWeight: 'bold' }
 });
 
 export default ShoppingCart;

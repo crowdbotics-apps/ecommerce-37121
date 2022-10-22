@@ -1,5 +1,5 @@
 from django.db import models
-from oscar.apps.address.abstract_models import AbstractUserAddress
+from oscar.apps.address.abstract_models import AbstractUserAddress, AbstractShippingAddress
 
 
 class UserAddress(AbstractUserAddress):
